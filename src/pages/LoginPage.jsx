@@ -4,6 +4,7 @@ import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '../shared/firebase';
 import styled from 'styled-components';
 import {useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,7 +26,17 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       console.log(userCredential.user);
-      navigate('login');
+      toast.success('로그인 성공!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+      navigate('/');
     } catch (error) {
       console.log(error.message);
     }

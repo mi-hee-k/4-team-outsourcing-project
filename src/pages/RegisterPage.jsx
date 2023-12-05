@@ -4,6 +4,7 @@ import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import {auth} from '../shared/firebase';
 import styled from 'styled-components';
 import {useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -27,6 +28,17 @@ const Register = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
       await updateProfile(userCredential.user, {displayName: inputs.nickname, photoURL: defaultPhotoUrl});
       console.log(userCredential);
+      toast.success('회원가입 성공!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+      navigate('/login');
     } catch (error) {
       console.log(error.message);
     }
