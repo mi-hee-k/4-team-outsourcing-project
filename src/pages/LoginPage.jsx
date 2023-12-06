@@ -18,6 +18,7 @@ const Login = () => {
     password: '',
   });
 
+  // input 변경
   const changeInputs = e => {
     setInputs({
       ...inputs,
@@ -25,9 +26,52 @@ const Login = () => {
     });
   };
 
+  // input 비우기
+  const clearInputs = () => {
+    setInputs({
+      email: '',
+      password: '',
+    });
+  };
+
+  // 유효성 검사
+  const checkInputs = () => {
+    // 빈칸
+    if (inputs.email.trim().length === 0 || inputs.email.trim().length === 0) {
+      toast.error('이메일과 비밀번호를 모두 입력해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
+      clearInputs();
+      return;
+    }
+    // 이메일형식이 아닐 때
+    if (!inputs.email.includes('@')) {
+      toast.error('올바른 이메일 형식을 입력해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
+      clearInputs();
+      return;
+    }
+  };
+
+  // email 로그인
   const loginEmail = async e => {
     e.preventDefault();
-
+    checkInputs();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       console.log(userCredential.user);
@@ -37,22 +81,18 @@ const Login = () => {
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: 'colored',
       });
       navigate('/');
       dispatch(login(userCredential.user));
     } catch (error) {
-      console.log(error.message);
+      console.error(error);
     }
-
-    setInputs({
-      email: '',
-      password: '',
-    });
   };
 
+  // google 로그인
   const loginGoogle = async e => {
     e.preventDefault();
     const provider = new GoogleAuthProvider();
@@ -64,7 +104,7 @@ const Login = () => {
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: 'colored',
       });
@@ -85,8 +125,15 @@ const Login = () => {
     <ScWrapper>
       <ScForm>
         <h1>로그인</h1>
-        <input type="text" placeholder="이메일" name="email" value={inputs.email} onChange={changeInputs} />
-        <input type="password" placeholder="비밀번호" name="password" value={inputs.password} onChange={changeInputs} />
+        <input type="email" placeholder="이메일" name="email" value={inputs.email} onChange={changeInputs} />
+        <input
+          type="password"
+          placeholder="비밀번호"
+          name="password"
+          required
+          value={inputs.password}
+          onChange={changeInputs}
+        />
         <Button onClick={loginEmail}>로그인</Button>
         <Button onClick={loginGoogle}>구글로 로그인</Button>
         <span onClick={moveToRegisterPage}>회원가입 하러가기</span>
