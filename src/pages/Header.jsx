@@ -1,10 +1,18 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import PinImage from '../asset/pin.png';
 import {useNavigate} from 'react-router-dom';
+import Button from '../components/UI/Button';
+import {useSelector} from 'react-redux';
 
 export default function Header() {
   const navigate = useNavigate();
+  const {accessToken, displayName, uid, photoURL, email} = useSelector(state => state.auth);
+  const isLogIned = accessToken ? true : false;
+  useEffect(() => {
+    console.log(displayName);
+  }, []);
+
   return (
     <>
       <Nav>
@@ -14,14 +22,35 @@ export default function Header() {
         </Left>
 
         <Right>
-          <div
-            onclick={() => {
-              navigate('/');
-            }}
-          >
-            마이페이지
-          </div>
-          <span>로그아웃</span>
+          {isLogIned ? (
+            <>
+              <Button
+                onClick={() => {
+                  navigate('/');
+                }}
+              >
+                {displayName}님의 마이페이지
+              </Button>
+              <Button>로그아웃</Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  navigate('/register');
+                }}
+              >
+                회원가입
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate('/login');
+                }}
+              >
+                로그인
+              </Button>
+            </>
+          )}
         </Right>
       </Nav>
     </>
