@@ -39,8 +39,8 @@ function WriteNewFix() {
       return '';
     }
 
-    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
-    //const imageRef = ref(storage, `test/${selectedFile.name}`);
+    //const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    const imageRef = ref(storage, `test/${selectedFile.name}`);
     try {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
