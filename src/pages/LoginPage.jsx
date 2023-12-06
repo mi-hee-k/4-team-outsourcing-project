@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import Button from '../components/UI/Button';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
 import {auth} from '../shared/firebase';
 import styled from 'styled-components';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
+import {GoogleAuthProvider} from 'firebase/auth';
+import {useDispatch} from 'react-redux';
+import {login} from '../redux/modules/Auth';
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
     email: '',
@@ -23,6 +27,7 @@ const Login = () => {
 
   const loginEmail = async e => {
     e.preventDefault();
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       console.log(userCredential.user);
@@ -37,6 +42,7 @@ const Login = () => {
         theme: 'colored',
       });
       navigate('/');
+      dispatch(login(userCredential.user));
     } catch (error) {
       console.log(error.message);
     }
@@ -47,8 +53,27 @@ const Login = () => {
     });
   };
 
-  const loginGoogle = e => {
+  const loginGoogle = async e => {
     e.preventDefault();
+    const provider = new GoogleAuthProvider();
+    try {
+      const userCredential = await signInWithPopup(auth, provider);
+      toast.success('로그인 성공!', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+      navigate('/');
+      dispatch(login(userCredential.user));
+      console.log(userCredential);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const moveToRegisterPage = e => {
