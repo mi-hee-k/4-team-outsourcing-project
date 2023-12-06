@@ -1,6 +1,14 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
-const initialState = {isUse: false, title: '제목', message: '메세지', btnMsg: '', btnFn: '', btnMsg2: '', btnFn2: ''};
+const initialState = {
+  isUse: false,
+  title: '제목',
+  message: '메세지',
+  btnMsg: '',
+  btnType: '',
+  btnMsg2: '',
+  btnType2: '',
+};
 
 const publicModalSlice = createSlice({
   name: 'publicModal',
