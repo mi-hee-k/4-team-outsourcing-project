@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Header from './Header';
 import styled, {css} from 'styled-components';
-import {useSelector} from 'react-redux';
+
 import fakedata from '../fakedata.json';
 import AddNew from '../components/AddNew';
 
@@ -9,7 +9,6 @@ import {useNavigate} from 'react-router';
 
 export default function Homepage() {
   const navigate = useNavigate();
-  //const loginYN = useSelector(state => state.auth);
 
   return (
     <Body>

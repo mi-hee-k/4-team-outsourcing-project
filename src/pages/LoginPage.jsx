@@ -86,9 +86,9 @@ const Login = () => {
         theme: 'colored',
       });
       localStorage.setItem('accessToken', userCredential.user.accessToken);
-      navigate('/');
       dispatch(login(userCredential.user));
-      console.log('gi');
+      console.log(2);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
