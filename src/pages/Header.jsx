@@ -3,14 +3,15 @@ import styled from 'styled-components';
 import PinImage from '../asset/pin.png';
 import {useNavigate} from 'react-router-dom';
 import Button from '../components/UI/Button';
-import {useSelector} from 'react-redux';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {logout} from '../redux/modules/Auth';
 export default function Header() {
   const navigate = useNavigate();
-  const {accessToken, displayName, uid, photoURL, email} = useSelector(state => state.auth);
-  const isLogIned = accessToken ? true : false;
+  const dispatch = useDispatch();
+  const {displayName, uid, photoURL, email, islogin} = useSelector(state => state.auth);
+  const isLogIned = islogin ? true : false;
   useEffect(() => {
-    console.log(displayName);
+    console.log('이즈로그인', isLogIned);
   }, []);
 
   return (
@@ -31,7 +32,13 @@ export default function Header() {
               >
                 {displayName}님의 마이페이지
               </Button>
-              <Button>로그아웃</Button>
+              <Button
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
+                로그아웃
+              </Button>
             </>
           ) : (
             <>
