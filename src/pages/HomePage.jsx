@@ -20,29 +20,27 @@ export default function Homepage() {
       <ListWrapper>
         {fakedata.map(item => {
           return (
-            <>
-              <List key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
-                <PhotoWrapper></PhotoWrapper>
-                <UserInfo>
-                  <Avatar>
-                    {' '}
-                    <img src={item.avatar} alt="아바타이미지" />
-                  </Avatar>
-                  <NicknameAndDate>
-                    <p>{item.nickname}</p>
-                    <time>{item.createdAt}</time>
-                  </NicknameAndDate>
-                </UserInfo>
-                <Content>{item.content}</Content>
-              </List>
-            </>
+            <List key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
+              <PhotoWrapper></PhotoWrapper>
+              <UserInfo>
+                <Avatar>
+                  {' '}
+                  <img src={item.avatar} alt="아바타이미지" />
+                </Avatar>
+                <NicknameAndDate>
+                  <p>{item.nickname}</p>
+                  <time>{item.createdAt}</time>
+                </NicknameAndDate>
+              </UserInfo>
+              <Content>{item.content}</Content>
+            </List>
           );
         })}
       </ListWrapper>
     </Body>
   );
 }
-const Body = styled.body`
+const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
