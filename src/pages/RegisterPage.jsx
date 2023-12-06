@@ -14,6 +14,7 @@ const Register = () => {
     password: '',
   });
 
+  // input 변경
   const changeInputs = e => {
     setInputs({
       ...inputs,
@@ -21,8 +22,78 @@ const Register = () => {
     });
   };
 
+  // input 비우기
+  const clearInputs = () => {
+    setInputs({
+      email: '',
+      nickname: '',
+      password: '',
+    });
+  };
+
+  // 유효성 검사
+  const checkInputs = () => {
+    // 빈칸
+    if (inputs.email.trim().length === 0 || inputs.email.trim().length === 0 || inputs.nickname.trim().length === 0) {
+      toast.error('정보를 모두 입력해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
+      clearInputs();
+      return;
+    }
+    // 닉네임 2~6자 사이
+    if (inputs.nickname.length < 2 || inputs.nickname.length > 6) {
+      toast.error('닉네임은 2~6자 사이로 만들어주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
+      clearInputs();
+      return;
+    }
+    return true;
+  };
+
+  // 오류메시지
+  const errorMsg = code => {
+    switch (code) {
+      case 'auth/user-not-found' || 'auth/wrong-password':
+        return '이메일 혹은 비밀번호가 일치하지 않습니다.';
+      case 'auth/email-already-in-use':
+        return '이미 사용 중인 이메일입니다.';
+      case 'auth/weak-password':
+        return '비밀번호는 6글자 이상이어야 합니다.';
+      case 'auth/network-request-failed':
+        return '네트워크 연결에 실패 하였습니다.';
+      case 'auth/invalid-email':
+        return '잘못된 이메일 형식입니다.';
+      case 'auth/internal-error':
+        return '잘못된 요청입니다.';
+      default:
+        return '로그인에 실패 하였습니다.';
+    }
+  };
+
+  // 회원가입
   const registerUser = async e => {
     e.preventDefault();
+
+    if (!checkInputs()) {
+      return;
+    }
+
     const defaultPhotoUrl = 'https://picpac.kr/common/img/default_profile.png';
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
@@ -34,13 +105,22 @@ const Register = () => {
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: 'colored',
       });
       navigate('/login');
     } catch (error) {
-      console.log(error.message);
+      toast.error(errorMsg(error.code), {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
 
     setInputs({
@@ -59,7 +139,7 @@ const Register = () => {
     <ScWrapper>
       <ScForm>
         <h1>회원가입</h1>
-        <input type="text" placeholder="이메일" name="email" value={inputs.email} onChange={changeInputs} />
+        <input type="email" placeholder="이메일" name="email" value={inputs.email} onChange={changeInputs} />
         <input type="text" placeholder="닉네임" name="nickname" value={inputs.nickname} onChange={changeInputs} />
         <input type="password" placeholder="비밀번호" name="password" value={inputs.password} onChange={changeInputs} />
         <Button onClick={registerUser}>회원가입</Button>
