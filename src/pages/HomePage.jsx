@@ -1,7 +1,7 @@
 import React from 'react';
-import AddNew from './AddNew';
+import AddNew from '../components/AddNew';
 
-function Home() {
+function HomePage() {
   return (
     <>
       <div>Home</div>
@@ -10,4 +10,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;

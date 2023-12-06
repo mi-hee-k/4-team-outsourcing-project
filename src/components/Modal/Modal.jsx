@@ -6,13 +6,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {showPublicModal, closePublicModal} from '../../redux/modules/publicModalSlice';
 import {closeAddModal} from '../../redux/modules/modalSlice';
 import PublicModal from './PublicModal';
+import {useNavigate} from 'react-router-dom';
+
 function Modal() {
   const publicModal = useSelector(state => state.publicModal);
-
-  console.log('publicModal', publicModal);
-  console.log('publicModal22', publicModal.isUse);
-
   const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   //메인모달 외부영역 클릭시 > 공용모달 오픈
   const closeModalOutside = event => {
@@ -22,12 +21,6 @@ function Modal() {
   };
 
   const openPublicModal = () => {
-    const goOut = () => {
-      dispatch(closePublicModal());
-      dispatch(closeAddModal()); //새글작성모달 닫기
-      navigator('/');
-    };
-
     dispatch(
       showPublicModal({
         isUse: true,
@@ -36,7 +29,11 @@ function Modal() {
         btnMsg: '계속 작성',
         btnFn: () => dispatch(closePublicModal()),
         btnMsg2: '나가기',
-        btnFn2: goOut,
+        btnFn2: () => {
+          dispatch(closePublicModal());
+          dispatch(closeAddModal()); //새글작성모달 닫기
+          navigator('/');
+        },
       }),
     );
   };
