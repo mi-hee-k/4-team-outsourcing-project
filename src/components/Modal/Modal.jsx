@@ -1,17 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import WriteNewFix from './WriteNewFix';
-
 import {useDispatch, useSelector} from 'react-redux';
-import {showPublicModal, closePublicModal} from '../../redux/modules/publicModalSlice';
-import {closeAddModal} from '../../redux/modules/modalSlice';
+import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import PublicModal from './PublicModal';
 import {useNavigate} from 'react-router-dom';
 
 function Modal() {
+  return <div>hi</div>;
+
   const publicModal = useSelector(state => state.publicModal);
   const dispatch = useDispatch();
-  const navigator = useNavigate();
 
   //메인모달 외부영역 클릭시 > 공용모달 오픈
   const closeModalOutside = event => {
@@ -27,13 +26,9 @@ function Modal() {
         title: '😯 정말 나가시겠어요?',
         message: '저장하지 않은 내용은 사라져요.',
         btnMsg: '계속 작성',
-        btnFn: () => dispatch(closePublicModal()),
+        btnType: 'continue',
         btnMsg2: '나가기',
-        btnFn2: () => {
-          dispatch(closePublicModal());
-          dispatch(closeAddModal()); //새글작성모달 닫기
-          navigator('/');
-        },
+        btnType2: 'exit', // 함수 대신 타입 지정
       }),
     );
   };
@@ -49,6 +44,7 @@ function Modal() {
       >
         <ScDivContainer>
           <button onClick={openPublicModal}>닫기</button>
+
           <WriteNewFix />
         </ScDivContainer>
       </ScDiv>

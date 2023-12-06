@@ -1,9 +1,14 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components';
+import PublicHook from './PublicHook';
 
 function PublicModal() {
-  const {title, message, btnMsg, btnFn, btnMsg2, btnFn2} = useSelector(state => state.publicModal);
+  const {title, message, btnMsg, btnType, btnMsg2, btnType2} = useSelector(state => state.publicModal);
+
+  const {handleContinueWriting, handleExit} = PublicHook();
+  const btnFn = btnType === 'continue' ? handleContinueWriting : null;
+  const btnFn2 = btnType2 === 'exit' ? handleExit : null;
 
   return (
     <>

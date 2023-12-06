@@ -5,15 +5,31 @@ import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {addDoc, collection} from 'firebase/firestore';
 import {closeAddModal} from '../../redux/modules/modalSlice';
 import {useDispatch} from 'react-redux';
+import {toast} from 'react-toastify';
 
 function WriteNewFix() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [selectedFile, setSelectedFile] = useState('');
   const dispatch = useDispatch();
 
+  const [selectedFile, setSelectedFile] = useState('');
+  const [previewFile, setPreviewFile] = useState('');
+
+  const [formState, setFormState] = useState({
+    title: '',
+    content: '',
+    // previewFile: '',
+  });
+
+  const {title, content} = formState;
+  //공용 함수
+  const onChangeHandler = event => {
+    const {name, value} = event.target;
+    setFormState(prev => ({...prev, [name]: value}));
+  };
+
+  //파일 선택
   const handleFileSelect = event => {
     setSelectedFile(event.target.files[0]);
+    setPreviewFile(URL.createObjectURL(event.target.files[0]));
   };
 
   //이미지 파일 업로드
@@ -23,7 +39,8 @@ function WriteNewFix() {
       return '';
     }
 
-    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    //const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    const imageRef = ref(storage, `test/${selectedFile.name}`);
     try {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
@@ -58,11 +75,12 @@ function WriteNewFix() {
             };
 
             //3. 파이어스토어에 데이터 저장
-            const collectionRef = collection(db, 'feeds');
+            const collectionRef = collection(db, 'fixs');
             await addDoc(collectionRef, newData);
 
             //4. 모달닫기
             dispatch(closeAddModal());
+            toast.success('저장되었습니다.');
           } catch (Error) {
             console.log('[form Error] (WriteNewFix.jsx): ', Error);
           }
@@ -72,24 +90,32 @@ function WriteNewFix() {
           <h1>어디로 '픽스' 할까요?</h1>
           <div>
             <ScInputTitle
+              name="title"
               value={title}
-              onChange={event => setTitle(event.target.value)}
+              onChange={onChangeHandler}
               placeholder="제목을 입력해주세요."
               maxLength={30}
             ></ScInputTitle>
           </div>
           <div>
             <ScTextareaContent
+              name="content"
               placeholder="내용을 입력해주세요"
               value={content}
-              onChange={event => {
-                setContent(event.currentTarget.value);
-              }}
+              onChange={onChangeHandler}
             ></ScTextareaContent>
           </div>
+
+          <div>
+            <p>이미지 미리보기</p>
+            <label>
+              <img name="previewFile" size="large" src={previewFile} />
+            </label>
+          </div>
+
           <div>
             <p>사진선택</p>
-            <input type="file" name="fileSelect" id="fileAttach" onChange={handleFileSelect}></input>
+            <input type="file" name="selectedFile" id="fileAttach" onChange={handleFileSelect}></input>
           </div>
           <div>
             <p>위치</p>
