@@ -5,13 +5,14 @@ import {useNavigate} from 'react-router-dom';
 import Button from '../components/UI/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../redux/modules/Auth';
+
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {displayName, uid, photoURL, email, islogin} = useSelector(state => state.auth);
-  const isLogIned = islogin ? true : false;
+  const {displayName, uid, photoURL, email, isLogin} = useSelector(state => state.auth);
+
   useEffect(() => {
-    console.log('이즈로그인', isLogIned);
+    console.log(isLogin, displayName);
   }, []);
 
   return (
@@ -23,7 +24,7 @@ export default function Header() {
         </Left>
 
         <Right>
-          {isLogIned ? (
+          {isLogin ? (
             <>
               <Button
                 onClick={() => {

@@ -74,7 +74,7 @@ const Login = () => {
     checkInputs();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
-      console.log(userCredential.user);
+      console.log(userCredential.user.accessToken);
       toast.success('로그인 성공!', {
         position: 'top-center',
         autoClose: 3000,
@@ -85,8 +85,10 @@ const Login = () => {
         progress: undefined,
         theme: 'colored',
       });
-      navigate('/');
+      localStorage.setItem('accessToken', userCredential.user.accessToken);
       dispatch(login(userCredential.user));
+      console.log(2);
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
@@ -108,9 +110,9 @@ const Login = () => {
         progress: undefined,
         theme: 'colored',
       });
+      localStorage.setItem('accessToken', userCredential.user.accessToken);
       navigate('/');
       dispatch(login(userCredential.user));
-      console.log(userCredential);
     } catch (error) {
       console.log(error.message);
     }
