@@ -7,8 +7,6 @@ import PublicModal from './PublicModal';
 import {useNavigate} from 'react-router-dom';
 
 function Modal() {
-  return <div>hi</div>;
-
   const publicModal = useSelector(state => state.publicModal);
   const dispatch = useDispatch();
 

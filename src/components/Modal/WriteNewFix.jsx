@@ -39,8 +39,8 @@ function WriteNewFix() {
       return '';
     }
 
-    //const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
-    const imageRef = ref(storage, `test/${selectedFile.name}`);
+    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    //const imageRef = ref(storage, `test/${selectedFile.name}`);
     try {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
@@ -71,7 +71,9 @@ function WriteNewFix() {
               content,
               date: formattedDate,
               image_url: uploadImageUrl,
+              //2가지 추가하기....
               //user: currentEmail
+              //displayname (닉네임?)
             };
 
             //3. 파이어스토어에 데이터 저장
