@@ -1,21 +1,42 @@
-import React, {useRef} from 'react';
 import styled from 'styled-components';
 import {SubButton} from '../components/UI/Button';
 import {useState} from 'react';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {db} from '../shared/firebase';
+import Map from '../components/Map';
+import {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {storage} from '../shared/firebase';
+import {ref} from 'firebase/storage';
+import {getDownloadURL, uploadBytes} from 'firebase/storage';
+import {toast} from 'react-toastify';
+import {useDispatch} from 'react-redux';
 
 function EditDetailPage() {
-  const [title, setTitle] = useState();
-  const [content, setContent] = useState();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [uploadImg, setUploadImg] = useState();
+  const [detailPost, setDetailPost] = useState({});
   const [previewImg, setPreviewImg] = useState();
-  const fileInput = useRef(null);
+  const {id} = useParams();
+  const navigate = useDispatch();
+
+  useEffect(() => {
+    const getFix = async () => {
+      const postRef = doc(db, 'fixs', id);
+      const post = await getDoc(postRef);
+      setDetailPost(post.data());
+      setPreviewImg(post.data().image_url);
+    };
+    getFix();
+  }, []);
+  console.log('디테일 포스트다', detailPost);
 
   const imgOnclickHandler = e => {
-    // setUploadImg(e.target.files[0]);
-    // setPreviewImg(fileInput.current.click());
-    setPreviewImg(window.URL.createObjectURL(e.target.files[0]));
+    setUploadImg(e.target.files[0]);
+    setPreviewImg(URL.createObjectURL(e.target.files[0]));
   };
-  console.log('이미지다', previewImg);
+
   const titleOnchangeHandler = e => {
     setTitle(e.target.value);
   };
@@ -23,24 +44,44 @@ function EditDetailPage() {
   const contentOnchangeHandler = e => {
     setContent(e.target.value);
   };
-  console.log('제목이다', title);
-  console.log('내용입니다', content);
+  // 수정함수
+  const postUpdateHandler = async e => {
+    e.preventDefault();
+    try {
+      const imageRef = ref(storage, `test/${uploadImg.name}`);
+      await uploadBytes(imageRef, uploadImg);
+      // ${auth,currentUser.id}
+      const downloadUrl = await getDownloadURL(imageRef);
+
+      const newPost = {
+        title,
+        content,
+        image_url: downloadUrl,
+      };
+      const postRef = doc(db, 'fixs', id);
+      await updateDoc(postRef, newPost);
+      toast.success('저장되었습니다.');
+      navigate('/detail/:id');
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div>
       <ScContainer>
-        <ScMain>
+        <ScMain onSubmit={postUpdateHandler}>
           <ScLabel htmlFor="postImg" type="button">
             <ScImgInput type="file" accept="image/*" id="postImg" onChange={imgOnclickHandler} />
-            <ScImg src="" alt="" accept="image/*" />
+            <ScImg src={previewImg} alt="" accept="image/*" />
           </ScLabel>
           <ScTitleBox>
-            <ScTitleInput onChange={titleOnchangeHandler} />
+            <ScTitleInput defaultValue={detailPost.title} onChange={titleOnchangeHandler} />
           </ScTitleBox>
-          <ScContentTextarea onChange={contentOnchangeHandler} />
-          <ScMap>지도</ScMap>
+          <ScContentTextarea defaultValue={detailPost.content} onChange={contentOnchangeHandler} />
+          <Map>지도</Map>
           <ScBtnBox>
-            <SubButton>수정완료</SubButton>
+            <SubButton type="submit">수정완료</SubButton>
           </ScBtnBox>
         </ScMain>
       </ScContainer>
