@@ -1,39 +1,72 @@
-import React from 'react';
-import styled from 'styled-components';
+import {collection, deleteDoc, getDocs} from 'firebase/firestore';
 import {CancelButton, SubButton} from '../components/UI/Button';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
+import {auth} from '../shared/firebase';
+import styled from 'styled-components';
+import React, {useState} from 'react';
+import {db} from '../shared/firebase';
+import Map from '../components/Map';
+import {useEffect} from 'react';
+import {toast} from 'react-toastify';
+import {doc, getDoc} from 'firebase/firestore';
 
 function DetailPage() {
-  // firebase 더미데이터 구축
-  // 불러와서 붙여넣기
-
+  const [detailPost, setDetailPost] = useState({});
+  const [allPost, setAllPost] = useState();
+  const {id} = useParams();
   const navigate = useNavigate();
-
   const navegateAddEdetail = () => {
-    navigate('/adddetail/:id');
+    navigate(`/editdetail/${id}`);
   };
 
-  // 파이어베이스 userPost 데이터 받아오기
+  useEffect(() => {
+    const getFix = async () => {
+      const postRef = doc(db, 'fixs', id);
+      const post = await getDoc(postRef);
+      setDetailPost(post.data());
+    };
+    getFix();
+  }, []);
+
+  console.log('포스트다', detailPost);
+
+  useEffect(() => {
+    const fetchFixs = async () => {
+      const allPost = await getDocs(collection(db, 'fixs'));
+      const Posts = allPost.docs.map(doc => doc.data());
+      setAllPost(Posts);
+    };
+    fetchFixs();
+  }, []);
+  console.log('불러온 데이터 모두다', allPost);
+
+  const deletePost = async post => {
+    const deleteCheck = window.confirm('삭제하시겠습니까?');
+    if (deleteCheck) {
+      await deleteDoc(doc(db, 'fixs', id));
+      const deleted = allPost.filter(data => {
+        return data.id !== post.id;
+      });
+      setAllPost(deleted);
+      toast.success('삭제되었습니다');
+      navigate('/');
+    } else {
+      return;
+    }
+  };
 
   return (
     <ScContainer>
       <ScMain>
-        <ScImg></ScImg>
+        <ScImg src={detailPost.image_url}></ScImg>
         <ScTitleBox>
-          <ScH1> 행궁동 힐릿 스팟(받아온 title) </ScH1>
+          <ScH1>{detailPost.title} </ScH1>
         </ScTitleBox>
-        <ScP>
-          흐르는 개천에 커피 한잔 들고 앉아서 쉬기에 좋아요.
-          <br />
-          <br />
-          앞에 적당히 카페들도 있고 조금만 더 걸으면 행궁동이라서 식사하고 산책 겸 걷다가
-          <br />
-          카페에서 커피한잔 테이크 아웃해서 들고 앉아서 여유즐기면 딱입니다.
-        </ScP>
-        <ScMap>지도</ScMap>
+        <ScP>{detailPost.content}</ScP>
+        <Map />
         <ScBtnBox>
           <SubButton onClick={navegateAddEdetail}>수정</SubButton>
-          <CancelButton>삭제</CancelButton>
+          <CancelButton onClick={() => deletePost(detailPost)}>삭제</CancelButton>
         </ScBtnBox>
       </ScMain>
     </ScContainer>
@@ -55,8 +88,7 @@ const ScMain = styled.div`
 
 const ScImg = styled.img`
   height: 350px;
-  width: 80vw;
-  background-color: var(--blue);
+  width: 100%;
 `;
 
 const ScH1 = styled.p`
@@ -86,13 +118,6 @@ const ScBtnBox = styled.div`
   flex-direction: row-reverse;
   align-items: center;
   gap: 10px;
-`;
-
-const ScMap = styled.div`
-  margin: 50px auto 0px auto;
-  width: 70%;
-  height: 230px;
-  background-color: var(--light-blue);
 `;
 
 export default DetailPage;
