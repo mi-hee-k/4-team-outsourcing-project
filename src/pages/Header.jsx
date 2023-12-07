@@ -11,14 +11,18 @@ export default function Header() {
   const dispatch = useDispatch();
   const {displayName, uid, photoURL, email, isLogin} = useSelector(state => state.auth);
 
-  useEffect(() => {
-    console.log(isLogin, displayName);
-  }, []);
+  //   useEffect(() => {
+  //     console.log(isLogin, displayName);
+  //   }, []);
 
   return (
     <>
       <Nav>
-        <Left>
+        <Left
+          onClick={() => {
+            navigate('/');
+          }}
+        >
           <img src={PinImage} alt="" />
           <h1>Let`s Fix</h1>
         </Left>
@@ -72,21 +76,30 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   background-color: var(--deep-blue);
+  font-size: 40px;
 `;
 
 const Left = styled.div`
   width: 30vw;
+  height: 100px;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
+  cursor: pointer;
   & img {
-    height: 30%;
-    width: 30%;
+    height: 100%;
+    width: 100px;
+  }
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+    transition: all 0.2s;
   }
 `;
 
 const Right = styled.div`
   width: 30vw;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
+  margin-right: 50px;
 `;
