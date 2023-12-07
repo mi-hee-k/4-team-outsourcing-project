@@ -8,7 +8,6 @@ import RegisterPage from '../pages/RegisterPage';
 import ProfilePage from '../pages/ProfilePage';
 import HomePage from '../pages/HomePage';
 
-
 function Router() {
   return (
     <BrowserRouter>
@@ -19,7 +18,6 @@ function Router() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/Detail/:id" element={<Detail />} />
       </Routes>
     </BrowserRouter>
   );
