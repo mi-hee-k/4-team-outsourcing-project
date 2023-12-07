@@ -155,7 +155,7 @@ const ScMyPageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  padding: 50px 0;
   text-align: center;
 
   h2 {
@@ -167,6 +167,7 @@ const ScMyPageWrapper = styled.div`
   hr {
     width: 80%;
     background-color: #eee;
+    margin-top: 50px;
     margin-bottom: 50px;
   }
 
