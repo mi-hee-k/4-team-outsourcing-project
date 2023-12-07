@@ -6,13 +6,15 @@ import {addDoc, collection} from 'firebase/firestore';
 import {closeAddModal} from '../../redux/modules/modalSlice';
 import {useDispatch} from 'react-redux';
 import {toast} from 'react-toastify';
+import {closePublicModal} from '../../redux/modules/publicModalSlice';
+import {useNavigate} from 'react-router-dom';
 
 function WriteNewFix() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [previewFile, setPreviewFile] = useState('');
-
+  const userUid = localStorage.getItem('uid');
   const [formState, setFormState] = useState({
     title: '',
     content: '',
@@ -40,7 +42,7 @@ function WriteNewFix() {
     }
 
     //const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
-    const imageRef = ref(storage, `test/${selectedFile.name}`);
+    const imageRef = ref(storage, `${userUid}/${selectedFile.name}`);
     try {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
@@ -54,6 +56,11 @@ function WriteNewFix() {
     dateStyle: 'full',
     timeStyle: 'short',
   }).format(new Date());
+
+  let cancleBtn = () => {
+    dispatch(closeAddModal()); // 새글작성모달 닫기
+    navigate('/');
+  };
 
   return (
     <>
@@ -108,12 +115,12 @@ function WriteNewFix() {
             ></ScTextareaContent>
           </div>
 
-          <div>
+          <ScDivPreview>
             <p>이미지 미리보기</p>
             <label>
               <img name="previewFile" size="large" src={previewFile} />
             </label>
-          </div>
+          </ScDivPreview>
 
           <div>
             <p>사진선택</p>
@@ -124,7 +131,9 @@ function WriteNewFix() {
           </div>
           <ScDivButton>
             <button type="submit">Fix하기</button>
-            <button>취소</button>
+            <button type="button" onClick={cancleBtn}>
+              취소
+            </button>
           </ScDivButton>
         </ScDiv>
       </form>
@@ -138,7 +147,7 @@ const ScDiv = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 20px;
-  margin-bottom: 20px;
+  margin: 20px auto;
   & h1 {
     font-size: 30px;
     margin-bottom: 20px;
@@ -151,12 +160,24 @@ const ScDiv = styled.div`
     gap: 20px;
     align-items: center;
   }
+
+  & img {
+    object-fit: cover;
+    width: 400px;
+    height: 300px;
+  }
 `;
 
 const ScDivButton = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
+`;
+
+const ScDivPreview = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 `;
 
 const ScInputTitle = styled.input`
