@@ -7,9 +7,8 @@ import {db} from '../shared/firebase';
 import {collection, getDocs} from '@firebase/firestore';
 import {getApp} from 'firebase/app';
 import {getStorage} from 'firebase/storage';
-
-const firebaseApp = getApp();
 import {auth} from '../shared/firebase';
+const firebaseApp = getApp();
 
 export default function Homepage() {
   const navigate = useNavigate();
