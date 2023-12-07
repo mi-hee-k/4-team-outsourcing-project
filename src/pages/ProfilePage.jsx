@@ -15,7 +15,7 @@ const ProfilePage = () => {
   const {displayName, photoURL} = userInfo;
   const [nickNameEditShown, setNickNameEditShown] = useState(false);
   const [photoEditShown, setPhotoEditShown] = useState(false);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(displayName);
   const [imgFile, setImgFile] = useState('');
   const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
