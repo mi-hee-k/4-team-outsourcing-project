@@ -14,11 +14,8 @@ function WriteNewFix() {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [previewFile, setPreviewFile] = useState('');
-  const userUid = localStorage.getItem('uid');
-  const displayname = localStorage.getItem('displayName');
 
-  // console.log('localStorage: ', userUid);
-  // console.log('auth: ', `${auth.currentUser.uid}`);
+  const {email, displayName, uid} = auth.currentUser;
 
   const [formState, setFormState] = useState({
     title: '',
@@ -100,10 +97,9 @@ function WriteNewFix() {
               content,
               date: formattedDate,
               image_url: uploadImageUrl,
-              //2가지 추가하기....
-              //id :
-              user: userUid,
-              displayname,
+              uid,
+              displayName,
+              email,
             };
 
             //3. 파이어스토어에 데이터 저장
