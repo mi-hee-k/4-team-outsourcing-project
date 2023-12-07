@@ -32,12 +32,12 @@ export default function Homepage() {
     // console.log(storage, '이게 스토리지 어레이');
   }, []);
   const {content, date, id, image_url, title} = docs;
-  // 가운데 정렬 타이틀 하고 css다듬고 아이디 빼고 지도 하기 아웃렛 하기
+  // 가운데 정렬 타이틀 하고 css다듬고 아이디 빼고 지도 하기 아웃렛 하기  const user = localStorage.getItem('uid');
+
   return (
     <Body>
       <Fixbar>
         <span>최근Fix한곳</span>
-        <AddNew isLoggedIn={true} />
       </Fixbar>
       <ListWrapper>
         {docs.map(item => {

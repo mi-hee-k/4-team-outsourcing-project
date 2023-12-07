@@ -1,10 +1,11 @@
 import React from 'react';
-import Detail from '../components/UI/Detail';
+
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import DetailPage from '../pages/DetailPage';
+import EditDetailPage from '../pages/EditDetailPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ProfilePage from '../pages/ProfilePage';
-
 import HomePage from '../pages/HomePage';
 
 import Layout from '../components/UI/Layout';
@@ -12,15 +13,19 @@ import {useSelector} from 'react-redux';
 import {replace} from 'stylis';
 
 function Router() {
-  const {islogin} = useSelector(state => state.auth);
+  const {isLogin} = useSelector(state => state.auth);
+  console.log(isLogin, '이즈로그인');
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
-          {!!islogin ? <Route path="/profile" element={<ProfilePage />} /> : null}
+          {isLogin ? <Route path="/profile" element={<ProfilePage />} /> : <></>}
           <Route path="/" element={<HomePage />} />
-          <Route path="/Detail/:id" element={<Detail />} />
+
+          <Route path="/detail/:id" element={<DetailPage />} />
+          <Route path="/adddetail/:id" element={<EditDetailPage />} />
         </Route>
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<Navigate replace to="/" />} />

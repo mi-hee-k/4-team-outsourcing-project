@@ -4,8 +4,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {openAddmodal} from '../redux/modules/modalSlice';
 import Modal from './Modal/Modal';
 
-function AddNew({isLoggedIn}) {
+function AddNew() {
   const modal = useSelector(state => state.modal);
+  const user = localStorage.getItem('uid');
   const dispatch = useDispatch();
 
   const openWriteModal = () => {
@@ -15,7 +16,7 @@ function AddNew({isLoggedIn}) {
   return (
     <>
       <Btn onClick={openWriteModal}>Fix 하러가기</Btn>
-      {isLoggedIn && modal.isUseInput && <Modal />}
+      {user && modal.isUseInput && <Modal />}
     </>
   );
 }
