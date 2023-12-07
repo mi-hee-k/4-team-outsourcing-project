@@ -32,8 +32,12 @@ const AuthSlice = createSlice({
       localStorage.setItem('displayName', action.payload);
       state.displayName = action.payload;
     },
+    updatePhoto: (state, action) => {
+      localStorage.setItem('photoURL', action.payload);
+      state.photoURL = action.payload;
+    },
   },
 });
 
-export const {login, logout, updateNickname} = AuthSlice.actions;
+export const {login, logout, updateNickname, updatePhoto} = AuthSlice.actions;
 export default AuthSlice.reducer;

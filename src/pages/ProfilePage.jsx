@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import Button from '../components/UI/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAuth, updateProfile} from '@firebase/auth';
-import {updateNickname} from '../redux/modules/Auth';
+import {updateNickname, updatePhoto} from '../redux/modules/Auth';
+import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
+import {storage} from '../shared/firebase';
 
 const ProfilePage = () => {
   const auth = getAuth();
@@ -15,17 +17,16 @@ const ProfilePage = () => {
   const [photoEditShown, setPhotoEditShown] = useState(false);
   const [nickname, setNickname] = useState('');
   const [imgFile, setImgFile] = useState('');
+  const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
 
-  const saveImgFile = () => {
-    const file = imgRef.current.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result);
-    };
+  // 이미지 저장
+  const saveImgFile = e => {
+    setImgFile(e.target.files[0]);
+    setPreviewImage(URL.createObjectURL(e.target.files[0]));
   };
 
+  console.log(imgFile);
   // input 변경
   const changeNickName = e => {
     setNickname(e.target.value);
@@ -41,9 +42,18 @@ const ProfilePage = () => {
     setPhotoEditShown(false);
   };
 
-  // 이미지 수정
+  // 이미지 수정(업로드)
   const handleEditPhoto = async () => {
-    alert('1');
+    try {
+      const storageRef = ref(storage, `${auth.currentUser.uid}/profile`);
+      await uploadBytes(storageRef, imgFile);
+      const downloadURL = await getDownloadURL(storageRef);
+      await updateProfile(auth.currentUser, {photoURL: downloadURL});
+      dispatch(updatePhoto(downloadURL));
+      setPhotoEditShown(false);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   // 프로필 수정하기
@@ -68,9 +78,11 @@ const ProfilePage = () => {
       return;
     }
     try {
+      // firebase 저장
       await updateProfile(auth.currentUser, {displayName: nickname});
       setNickNameEditShown(false);
       setNickname('');
+      // redux에 업데이트
       dispatch(updateNickname(nickname));
       console.log(auth.currentUser);
     } catch (error) {
@@ -85,21 +97,29 @@ const ProfilePage = () => {
         <h2>마이페이지</h2>
         <ScProfileWrapper>
           <div>
-            <ScImgWrapper>
-              <img src={imgFile ? imgFile : photoURL} alt="" />
-            </ScImgWrapper>
+            <label htmlFor="profileImg" onClick={handleUpdatePhoto}>
+              <input
+                type="file"
+                accept="image/*"
+                id="profileImg"
+                style={{display: 'none'}}
+                onChange={saveImgFile}
+                ref={imgRef}
+              />
+              <ScImgWrapper>
+                <img src={previewImage} alt="" />
+              </ScImgWrapper>
+            </label>
+
             {photoEditShown ? (
               <div>
-                <input type="file" accept="image/*" id="profileImg" onChange={saveImgFile} ref={imgRef} />
                 <ScBtnWrapper>
                   <Button onClick={handleEditPhoto}>수정</Button>
                   <Button onClick={cancelUpdatePhoto}>취소</Button>
                 </ScBtnWrapper>
               </div>
             ) : (
-              <label htmlFor="profileImg" onClick={handleUpdatePhoto}>
-                프로필 이미지 변경
-              </label>
+              <ScLabel onClick={handleUpdatePhoto}>프로필 이미지 변경</ScLabel>
             )}
           </div>
           <div>
@@ -170,7 +190,6 @@ const ScMyPageWrapper = styled.div`
     border: 1px solid #868686;
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 10px;
   }
 `;
 
@@ -181,12 +200,6 @@ const ScProfileWrapper = styled.div`
 
   figure {
     margin-right: 20px;
-  }
-
-  label {
-    font-weight: bold;
-    cursor: pointer;
-    color: var(--deep-blue);
   }
 
   h3 {
@@ -204,16 +217,28 @@ const ScImgWrapper = styled.figure`
   border: 1px solid black;
   border-radius: 50%;
   overflow: hidden;
+  width: 200px;
+  height: 200px;
 
   img {
-    width: 200px;
-    height: 200px;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
   }
+`;
+
+const ScLabel = styled.label`
+  display: inline-block;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--deep-blue);
+  margin-top: 20px;
 `;
 
 const ScBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 30px;
   gap: 10px;
 
   button {
