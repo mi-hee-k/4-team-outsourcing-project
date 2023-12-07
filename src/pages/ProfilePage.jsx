@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import Header from './Header';
 import styled from 'styled-components';
 import Button from '../components/UI/Button';
@@ -11,27 +11,53 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector(state => state.auth);
   const {displayName, photoURL} = userInfo;
-
-  const [isEditShown, setIsEditShown] = useState(false);
+  const [nickNameEditShown, setNickNameEditShown] = useState(false);
+  const [photoEditShown, setPhotoEditShown] = useState(false);
   const [nickname, setNickname] = useState('');
+  const [imgFile, setImgFile] = useState('');
+  const imgRef = useRef();
+
+  const saveImgFile = () => {
+    const file = imgRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImgFile(reader.result);
+    };
+  };
 
   // input 변경
   const changeNickName = e => {
     setNickname(e.target.value);
   };
 
+  // 이미지 수정하기
+  const handleUpdatePhoto = () => {
+    setPhotoEditShown(true);
+  };
+
+  // 이미지 수정취소
+  const cancelUpdatePhoto = () => {
+    setPhotoEditShown(false);
+  };
+
+  // 이미지 수정
+  const handleEditPhoto = async () => {
+    alert('1');
+  };
+
   // 프로필 수정하기
-  const handleUpdateProfile = () => {
-    setIsEditShown(true);
+  const handleUpdateNickname = () => {
+    setNickNameEditShown(true);
   };
 
   // 프로필 수정 취소
-  const cancelUpdate = () => {
-    setIsEditShown(false);
+  const cancelUpdateNickname = () => {
+    setNickNameEditShown(false);
   };
 
-  // 수정
-  const handleEditProfile = async () => {
+  // 프로필 수정
+  const handleEditNickname = async () => {
     if (nickname.trim().length < 1) {
       alert('내용을 입력해주세요');
       return;
@@ -43,7 +69,7 @@ const ProfilePage = () => {
     }
     try {
       await updateProfile(auth.currentUser, {displayName: nickname});
-      setIsEditShown(false);
+      setNickNameEditShown(false);
       setNickname('');
       dispatch(updateNickname(nickname));
       console.log(auth.currentUser);
@@ -58,25 +84,40 @@ const ProfilePage = () => {
       <section>
         <h2>마이페이지</h2>
         <ScProfileWrapper>
-          <ScImgWrapper>
-            <img src={photoURL} alt="" />
-          </ScImgWrapper>
+          <div>
+            <ScImgWrapper>
+              <img src={imgFile ? imgFile : photoURL} alt="" />
+            </ScImgWrapper>
+            {photoEditShown ? (
+              <div>
+                <input type="file" accept="image/*" id="profileImg" onChange={saveImgFile} ref={imgRef} />
+                <ScBtnWrapper>
+                  <Button onClick={handleEditPhoto}>수정</Button>
+                  <Button onClick={cancelUpdatePhoto}>취소</Button>
+                </ScBtnWrapper>
+              </div>
+            ) : (
+              <label htmlFor="profileImg" onClick={handleUpdatePhoto}>
+                프로필 이미지 변경
+              </label>
+            )}
+          </div>
           <div>
             <h3>
               <span>{displayName}</span> 님 반갑습니다!
             </h3>
-            {isEditShown ? (
+            {nickNameEditShown ? (
               <>
                 <div>
                   <input type="text" value={nickname} onChange={changeNickName} />
                 </div>
                 <ScBtnWrapper>
-                  <Button onClick={handleEditProfile}>수정</Button>
-                  <Button onClick={cancelUpdate}>취소</Button>
+                  <Button onClick={handleEditNickname}>수정</Button>
+                  <Button onClick={cancelUpdateNickname}>취소</Button>
                 </ScBtnWrapper>
               </>
             ) : (
-              <Button onClick={handleUpdateProfile}>프로필 수정하기</Button>
+              <Button onClick={handleUpdateNickname}>프로필 수정하기</Button>
             )}
           </div>
         </ScProfileWrapper>
@@ -140,6 +181,12 @@ const ScProfileWrapper = styled.div`
 
   figure {
     margin-right: 20px;
+  }
+
+  label {
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--deep-blue);
   }
 
   h3 {
