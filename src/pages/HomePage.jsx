@@ -7,7 +7,7 @@ import {db} from '../shared/firebase';
 import {collection, getDocs} from '@firebase/firestore';
 import {getApp} from 'firebase/app';
 import {getStorage} from 'firebase/storage';
-
+import {auth} from '../shared/firebase';
 const firebaseApp = getApp();
 
 export default function Homepage() {
@@ -33,11 +33,13 @@ export default function Homepage() {
   }, []);
   const {content, date, id, image_url, title} = docs;
   // 가운데 정렬 타이틀 하고 css다듬고 아이디 빼고 지도 하기 아웃렛 하기  const user = localStorage.getItem('uid');
+  const [isLoggedIn] = useState(auth.currentUser !== null);
 
   return (
     <Body>
       <Fixbar>
         <span>최근Fix한곳</span>
+        {isLoggedIn && <AddNew />}
       </Fixbar>
       <ListWrapper>
         {docs.map(item => {
