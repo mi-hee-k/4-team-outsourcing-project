@@ -54,7 +54,6 @@ const ProfilePage = () => {
 
   return (
     <ScMyPageWrapper>
-      <Header />
       <section>
         <h2>마이페이지</h2>
         <ScProfileWrapper>
@@ -98,12 +97,6 @@ const ScMyPageWrapper = styled.div`
   width: 100%;
   height: 100vh;
   text-align: center;
-
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
 
   h2 {
     font-size: 2rem;
