@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import WriteNewFix from './WriteNewFix';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,6 +9,19 @@ import {useNavigate} from 'react-router-dom';
 function Modal() {
   const publicModal = useSelector(state => state.publicModal);
   const dispatch = useDispatch();
+
+  //외부화면 스크롤 방지
+  useEffect(() => {
+    if (publicModal.isUse) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [publicModal.isUse]);
 
   //메인모달 외부영역 클릭시 > 공용모달 오픈
   const closeModalOutside = event => {
@@ -41,8 +54,6 @@ function Modal() {
         }}
       >
         <ScDivContainer>
-          <button onClick={openPublicModal}>닫기</button>
-
           <WriteNewFix />
         </ScDivContainer>
       </ScDiv>
@@ -70,6 +81,7 @@ const ScDivContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: var(--white);
+  border-radius: 12px;
 `;
 
 export default Modal;
