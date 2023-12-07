@@ -10,10 +10,8 @@ import {auth} from '../shared/firebase';
 
 export default function Homepage() {
   const navigate = useNavigate();
-
   const [isLoggedIn] = useState(auth.currentUser !== null);
 
-  console.log('isLoggedIn', [isLoggedIn]);
   return (
     <Body>
       <Header />
