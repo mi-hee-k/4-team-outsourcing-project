@@ -94,7 +94,8 @@ const Register = () => {
       return;
     }
 
-    const defaultPhotoUrl = 'https://picpac.kr/common/img/default_profile.png';
+    const defaultPhotoUrl =
+      'https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F26470D3654FC08C40C';
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
       await updateProfile(userCredential.user, {displayName: inputs.nickname, photoURL: defaultPhotoUrl});
