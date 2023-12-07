@@ -84,7 +84,6 @@ const ProfilePage = () => {
       setNickname('');
       // redux에 업데이트
       dispatch(updateNickname(nickname));
-      console.log(auth.currentUser);
     } catch (error) {
       console.log(error);
     }
