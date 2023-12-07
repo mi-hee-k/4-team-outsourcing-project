@@ -28,7 +28,7 @@ export default function Header() {
             <>
               <Button
                 onClick={() => {
-                  navigate('/');
+                  navigate('/profile');
                 }}
               >
                 {displayName}님의 마이페이지
