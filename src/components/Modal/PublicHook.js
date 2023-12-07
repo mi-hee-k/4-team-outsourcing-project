@@ -10,11 +10,9 @@ function PublicHook() {
 
   const handleContinueWriting = () => {
     dispatch(closePublicModal());
-    console.log('계속');
   };
 
   const handleExit = () => {
-    console.log('나가기');
     dispatch(closePublicModal());
     dispatch(closeAddModal()); // 새글작성모달 닫기
     navigate('/');

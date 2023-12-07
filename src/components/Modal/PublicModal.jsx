@@ -36,6 +36,7 @@ const ScDiv = styled.div`
   width: 100%;
   height: 100vh;
   top: 0;
+  left: 0;
   border: none;
 `;
 
@@ -94,11 +95,11 @@ const ScButtonSecond = styled.button`
   width: calc(50% - 5px);
   height: 40px;
   background-color: var(--deep-blue);
-  background-color: var(--white);
-  color: var(--deep-blue);
+  color: var(--white);
   border-radius: 8px;
   font-size: 16px;
   font-weight: 500;
+  border: none;
   cursor: pointer;
 `;
 
