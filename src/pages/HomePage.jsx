@@ -9,13 +9,14 @@ import {useNavigate} from 'react-router';
 
 export default function Homepage() {
   const navigate = useNavigate();
+  const user = localStorage.getItem('uid');
 
   return (
     <Body>
       <Header />
       <Fixbar>
         <span>최근Fix한곳</span>
-        <AddNew isLoggedIn={true} />
+        {user ? <AddNew /> : ''}
       </Fixbar>
       <ListWrapper>
         {fakedata.map(item => {
