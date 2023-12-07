@@ -26,6 +26,7 @@ const AuthSlice = createSlice({
     },
     logout: (state, action) => {
       localStorage.clear();
+
       return (state = {});
     },
     updateNickname: (state, action) => {

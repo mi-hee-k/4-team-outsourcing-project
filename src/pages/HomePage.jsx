@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from './Header';
 import styled, {css} from 'styled-components';
 
@@ -6,17 +6,20 @@ import fakedata from '../fakedata.json';
 import AddNew from '../components/AddNew';
 
 import {useNavigate} from 'react-router';
+import {auth} from '../shared/firebase';
 
 export default function Homepage() {
   const navigate = useNavigate();
-  const user = localStorage.getItem('uid');
 
+  const [isLoggedIn] = useState(auth.currentUser !== null);
+
+  console.log('isLoggedIn', [isLoggedIn]);
   return (
     <Body>
       <Header />
       <Fixbar>
         <span>최근Fix한곳</span>
-        {user ? <AddNew /> : ''}
+        {isLoggedIn && <AddNew />}
       </Fixbar>
       <ListWrapper>
         {fakedata.map(item => {
