@@ -68,6 +68,7 @@ const ScDiv = styled.div`
   width: 100%;
   height: 100vh;
   top: 0;
+  left: 0;
   border: none;
 `;
 
