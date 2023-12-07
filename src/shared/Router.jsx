@@ -14,7 +14,7 @@ import {replace} from 'stylis';
 
 function Router() {
   const {isLogin} = useSelector(state => state.auth);
-  console.log(isLogin, '이즈로그인');
+
   return (
     <BrowserRouter>
       <Routes>
