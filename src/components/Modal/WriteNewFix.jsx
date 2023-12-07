@@ -6,19 +6,23 @@ import {addDoc, collection} from 'firebase/firestore';
 import {closeAddModal} from '../../redux/modules/modalSlice';
 import {useDispatch} from 'react-redux';
 import {toast} from 'react-toastify';
-import {closePublicModal} from '../../redux/modules/publicModalSlice';
 import {useNavigate} from 'react-router-dom';
-
+import pinImg from '../../asset/pin.png';
+import {showPublicModal} from '../../redux/modules/publicModalSlice';
 function WriteNewFix() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [previewFile, setPreviewFile] = useState('');
   const userUid = localStorage.getItem('uid');
+  const displayname = localStorage.getItem('displayName');
+
+  // console.log('localStorage: ', userUid);
+  // console.log('auth: ', `${auth.currentUser.uid}`);
+
   const [formState, setFormState] = useState({
     title: '',
     content: '',
-    // previewFile: '',
   });
 
   const {title, content} = formState;
@@ -26,6 +30,12 @@ function WriteNewFix() {
   const onChangeHandler = event => {
     const {name, value} = event.target;
     setFormState(prev => ({...prev, [name]: value}));
+  };
+
+  //파일 삭제
+  const handleFileDelete = event => {
+    setPreviewFile('');
+    return;
   };
 
   //파일 선택
@@ -41,8 +51,8 @@ function WriteNewFix() {
       return '';
     }
 
-    //const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
-    const imageRef = ref(storage, `${userUid}/${selectedFile.name}`);
+    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    //const imageRef = ref(storage, `${userUid}/${selectedFile.name}`);
     try {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
@@ -58,7 +68,19 @@ function WriteNewFix() {
   }).format(new Date());
 
   let cancleBtn = () => {
-    dispatch(closeAddModal()); // 새글작성모달 닫기
+    dispatch(
+      showPublicModal({
+        isUse: true,
+        title: '😯 정말 나가시겠어요?',
+        message: '저장하지 않은 내용은 사라져요.',
+        btnMsg: '계속 작성',
+        btnType: 'continue',
+        btnMsg2: '나가기',
+        btnType2: 'exit', // 함수 대신 타입 지정
+      }),
+    );
+
+    //dispatch(closeAddModal()); // 새글작성모달 닫기
     navigate('/');
   };
 
@@ -79,8 +101,9 @@ function WriteNewFix() {
               date: formattedDate,
               image_url: uploadImageUrl,
               //2가지 추가하기....
-              //user: currentEmail
-              //displayname (닉네임?)
+              //id :
+              user: userUid,
+              displayname,
             };
 
             //3. 파이어스토어에 데이터 저장
@@ -96,7 +119,9 @@ function WriteNewFix() {
         }}
       >
         <ScDiv>
-          <h1>어디로 '픽스' 할까요?</h1>
+          <div>
+            <h1>어디로 '픽스' 할까요?</h1>
+          </div>
           <div>
             <ScInputTitle
               name="title"
@@ -115,25 +140,32 @@ function WriteNewFix() {
             ></ScTextareaContent>
           </div>
 
-          <ScDivPreview>
-            <p>이미지 미리보기</p>
-            <label>
-              <img name="previewFile" size="large" src={previewFile} />
-            </label>
-          </ScDivPreview>
-
-          <div>
-            <p>사진선택</p>
+          <ScDivFileUpload>
             <input type="file" name="selectedFile" id="fileAttach" onChange={handleFileSelect}></input>
-          </div>
+            <label htmlFor="fileAttach">사진 선택</label>
+
+            <ScButtonDelete type="button" id="fileDelete" onClick={handleFileDelete}></ScButtonDelete>
+            <label htmlFor="fileDelete">사진 삭제</label>
+          </ScDivFileUpload>
+
+          {previewFile ? (
+            <ScDivPreview>
+              <label>
+                <img name="previewFile" size="large" src={previewFile} />
+              </label>
+            </ScDivPreview>
+          ) : (
+            <></>
+          )}
+
           <div>
             <p>위치</p>
           </div>
           <ScDivButton>
-            <button type="submit">Fix하기</button>
-            <button type="button" onClick={cancleBtn}>
+            <ScButtonFix type="submit">Fix하기</ScButtonFix>
+            <ScButtonFix type="button" onClick={cancleBtn}>
               취소
-            </button>
+            </ScButtonFix>
           </ScDivButton>
         </ScDiv>
       </form>
@@ -146,16 +178,19 @@ const ScDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 7px;
   margin: 20px auto;
+
   & h1 {
     font-size: 30px;
     margin-bottom: 20px;
+    text-align: center;
   }
   & div {
     width: 100%;
     padding-right: 20px;
     padding-left: 30px;
+
     display: flex;
     gap: 20px;
     align-items: center;
@@ -168,10 +203,47 @@ const ScDiv = styled.div`
   }
 `;
 
+const ScImageLogo = styled.image`
+  height: 30%;
+  width: 30%;
+  z-index: 100;
+`;
+
+const ScDivFileUpload = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding-left: 10px;
+  & input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  & label {
+    border: 1px solid var(--deep-blue);
+    background-color: #fff;
+    color: var(--deep-blue);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 14px;
+    outline: none;
+  }
+`;
+
 const ScDivButton = styled.div`
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
+`;
+
+const ScButtonDelete = styled.button`
+  display: none;
 `;
 
 const ScDivPreview = styled.div`
@@ -186,18 +258,18 @@ const ScInputTitle = styled.input`
   font-size: 20px;
   margin-top: 8px;
   margin-bottom: 8px;
-  padding-bottom: 10px;
+  //padding-bottom: 10px;
   border: none;
   font-weight: 500;
-  border-bottom: 1px solid var(--black);
-
+  //border: 1px solid var(--black);
+  background-color: var(--light-blue);
   &::placeholder {
     color: #bbb;
   }
 `;
 
 const ScTextareaContent = styled.textarea`
-  min-height: 17vh;
+  min-height: 14vh;
   max-height: 30vh;
   overflow-y: auto;
   box-sizing: content-box;
@@ -206,15 +278,31 @@ const ScTextareaContent = styled.textarea`
   margin-bottom: 20px;
   font-size: 15px;
   word-break: keep-all;
-
+  border: none;
   resize: none;
   width: 100%;
-  border: none;
+
   color: var(--black);
-  border-bottom: 1px solid var(--black);
+  background-color: var(--light-blue);
   &::placeholder {
     color: #bbb;
   }
+`;
+
+const ScButtonFix = styled.button`
+  width: 20%;
+  height: 34px;
+  margin-top: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: var(--deep-blue);
+  color: white;
+  &:hover {
+    border: 1px solid var(--deep-blue);
+    box-shadow: rgb(57, 167, 255, 0.4) 0px 0px 0px 3px;
+  }
+  border: none;
 `;
 
 export default WriteNewFix;
