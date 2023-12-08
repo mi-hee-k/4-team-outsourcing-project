@@ -5,7 +5,7 @@ import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import {db} from '../shared/firebase';
 import Map from '../components/Map';
 import {useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {storage} from '../shared/firebase';
 import {ref} from 'firebase/storage';
 import {getDownloadURL, uploadBytes} from 'firebase/storage';
@@ -19,7 +19,9 @@ function EditDetailPage() {
   const [detailPost, setDetailPost] = useState({});
   const [previewImg, setPreviewImg] = useState();
   const {id} = useParams();
-  const navigate = useDispatch();
+  const navigate = useNavigate();
+  //  데이터 가져오는 속도가 느림으로 인한 오류해결 필요
+  //  수정하지 않으면 넘어갈 수 없게 벨리데이션 체크 필요
 
   useEffect(() => {
     const getFix = async () => {
@@ -47,6 +49,7 @@ function EditDetailPage() {
   // 수정함수
   const postUpdateHandler = async e => {
     e.preventDefault();
+
     try {
       const imageRef = ref(storage, `test/${uploadImg.name}`);
       await uploadBytes(imageRef, uploadImg);
@@ -61,9 +64,9 @@ function EditDetailPage() {
       const postRef = doc(db, 'fixs', id);
       await updateDoc(postRef, newPost);
       toast.success('저장되었습니다.');
-      navigate('/detail/:id');
+      navigate(`/detail/${id}`);
     } catch (err) {
-      console.log(err);
+      console.log('수정 에러메세지다', err);
     }
   };
 
@@ -76,9 +79,9 @@ function EditDetailPage() {
             <ScImg src={previewImg} alt="" accept="image/*" />
           </ScLabel>
           <ScTitleBox>
-            <ScTitleInput defaultValue={detailPost.title} onChange={titleOnchangeHandler} />
+            <ScTitleInput required autoFocus defaultValue={detailPost.title} onChange={titleOnchangeHandler} />
           </ScTitleBox>
-          <ScContentTextarea defaultValue={detailPost.content} onChange={contentOnchangeHandler} />
+          <ScContentTextarea required defaultValue={detailPost.content} onChange={contentOnchangeHandler} />
           <Map>지도</Map>
           <ScBtnBox>
             <SubButton type="submit">수정완료</SubButton>
@@ -94,7 +97,7 @@ const ScContainer = styled.div`
   width: 100vw;
   height: 200vh;
 `;
-const ScMain = styled.div`
+const ScMain = styled.form`
   width: 80vw;
   height: 170vh;
   border: 2px solid #f6f6f6;
