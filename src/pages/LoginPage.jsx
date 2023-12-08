@@ -75,6 +75,7 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       console.log(userCredential.user.accessToken);
+
       toast.success('로그인 성공!', {
         position: 'top-center',
         autoClose: 3000,

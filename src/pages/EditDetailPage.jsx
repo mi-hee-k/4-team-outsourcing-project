@@ -82,7 +82,7 @@ function EditDetailPage() {
             <ScTitleInput required autoFocus defaultValue={detailPost.title} onChange={titleOnchangeHandler} />
           </ScTitleBox>
           <ScContentTextarea required defaultValue={detailPost.content} onChange={contentOnchangeHandler} />
-          <Map>지도</Map>
+          {/* <Map>지도</Map> */}
           <ScBtnBox>
             <SubButton type="submit">수정완료</SubButton>
           </ScBtnBox>

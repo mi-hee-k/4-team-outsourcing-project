@@ -9,6 +9,7 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
+import {addlist} from '../../redux/modules/fixList';
 
 function WriteNewFix() {
   //지도
@@ -73,7 +74,7 @@ function WriteNewFix() {
   const [selectedFile, setSelectedFile] = useState('');
   const [previewFile, setPreviewFile] = useState('');
 
-  const {email, displayName, uid} = auth.currentUser;
+  const {email, displayName, uid, photoURL} = auth.currentUser;
   const [addrInput, setAddrInput] = useState('');
   const [formState, setFormState] = useState({
     title: '',
@@ -154,10 +155,12 @@ function WriteNewFix() {
               title,
               content,
               date: formattedDate,
+              createdAt: new Date(),
               image_url: uploadImageUrl,
               uid,
               displayName,
               email,
+              photoURL: photoURL ? photoURL : pinImg,
               addrInput,
             };
 
@@ -168,6 +171,7 @@ function WriteNewFix() {
             //4. 모달닫기
             dispatch(closeAddModal());
             toast.success('저장되었습니다.');
+            dispatch(addlist(newData));
           } catch (Error) {
             console.log('[form Error] (WriteNewFix.jsx): ', Error);
           }

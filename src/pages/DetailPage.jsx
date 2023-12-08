@@ -24,15 +24,8 @@ function DetailPage() {
     dispatch(__getFix(id));
   }, []);
 
-  if (isLoading) {
-    <h1>Loding..</h1>;
-  }
-
-  if (isError) {
-    toast.success('오류가 발생했습니다. 다시 시도해주세요');
-    navigate('/');
-  }
   const user = auth.currentUser;
+  console.log({user});
 
   const deletePost = async post => {
     const deleteCheck = window.confirm('삭제하시겠습니까?');
@@ -44,6 +37,14 @@ function DetailPage() {
       return;
     }
   };
+  if (isLoading) {
+    <h1>Loding..</h1>;
+  }
+
+  if (isError) {
+    toast.success('오류가 발생했습니다. 다시 시도해주세요');
+    navigate('/');
+  }
 
   return (
     <ScContainer>
@@ -55,11 +56,15 @@ function DetailPage() {
         <ScP>{fix.content}</ScP>
         <Map />
         <ScBtnBox>
-          {user.email === fix.email ? (
-            <>
-              <SubButton onClick={navegateAddEdetail}>수정</SubButton>
-              <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
-            </>
+          {user ? (
+            user.email !== fix.email ? (
+              <></>
+            ) : (
+              <>
+                <SubButton onClick={navegateAddEdetail}>수정</SubButton>
+                <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
+              </>
+            )
           ) : (
             <></>
           )}
@@ -77,13 +82,13 @@ const ScContainer = styled.div`
 `;
 
 const ScMain = styled.div`
-  width: 80vw;
+  width: 60%;
   height: 170vh;
   border: 2px solid #f6f6f6;
 `;
 
 const ScImg = styled.img`
-  height: 350px;
+  height: 450px;
   width: 100%;
 `;
 
@@ -108,11 +113,10 @@ const ScP = styled.p`
 `;
 
 const ScBtnBox = styled.div`
-  width: 75vw;
-  height: 70px;
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+  margin: 30px 50px 0px 0px;
   gap: 10px;
 `;
 
