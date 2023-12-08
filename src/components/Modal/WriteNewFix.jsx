@@ -10,7 +10,7 @@ import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import {addlist} from '../../redux/modules/fixList';
-
+import bonobono from '../../asset/bonobono.jpg';
 function WriteNewFix() {
   //지도
   const [map, setMap] = useState(null);
@@ -156,7 +156,7 @@ function WriteNewFix() {
               content,
               date: formattedDate,
               createdAt: new Date(),
-              image_url: uploadImageUrl,
+              image_url: uploadImageUrl ? uploadImageUrl : bonobono,
               uid,
               displayName,
               email,
