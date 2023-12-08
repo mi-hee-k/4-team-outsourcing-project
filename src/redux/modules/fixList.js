@@ -9,7 +9,7 @@ const listSlice = createSlice({
     setList: (state, action) => {
       return action.payload;
     },
-    addlist: (state, action) => {
+    addList: (state, action) => {
       state.unshift(action.payload);
     },
   },
@@ -17,4 +17,4 @@ const listSlice = createSlice({
 
 export default listSlice.reducer;
 
-export const {setList, addlist} = listSlice.actions;
+export const {setList, addList} = listSlice.actions;

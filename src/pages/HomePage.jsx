@@ -24,7 +24,7 @@ export default function Homepage() {
       querySnapshot.forEach(doc => {
         const data = doc.data();
 
-        console.log(data, ' 이게 독 아이디');
+        // console.log(data, ' 이게 독 아이디');
         dataArr.push({...data, id: doc.id});
 
         // console.log(data.createdAt, '이게그거');
