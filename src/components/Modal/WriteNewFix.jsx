@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {auth, db, storage} from '../../shared/firebase';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
@@ -9,14 +9,72 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
+
 function WriteNewFix() {
+  //지도
+  const [map, setMap] = useState(null);
+  const [marker, setMarker] = useState(null);
+
+  // 1) 카카오맵 불러오기
+  useEffect(() => {
+    window.kakao.maps.load(() => {
+      const container = document.getElementById('map');
+      const options = {
+        center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 초기 중심 좌표
+        level: 3, // 초기 줌 레벨
+      };
+
+      const map = new window.kakao.maps.Map(container, options);
+      const marker = new window.kakao.maps.Marker();
+
+      // 맵과 마커를 상태에 저장
+      setMap(map);
+      setMarker(marker);
+    });
+  }, []);
+
+  const searchAddress = () => {
+    // Kakao Maps에서 제공하는 주소 검색 대화상자 열기
+
+    if (window.daum && window.daum.Postcode) {
+      new window.daum.Postcode({
+        oncomplete: function (addrData) {
+          const geocoder = new window.kakao.maps.services.Geocoder();
+
+          // 주소로 상세 정보를 검색
+          geocoder.addressSearch(addrData.address, function (result, status) {
+            // 정상적으로 검색이 완료됐으면
+            if (status === window.kakao.maps.services.Status.OK) {
+              //첫번째 결과의 값을 활용
+              // 해당 주소에 대한 좌표를 받아서
+              const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+
+              // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
+              // 선택한 주소로 입력 필드 업데이트
+              setAddrInput(addrData.address);
+
+              // 맵을 선택한 위치로 이동하고 마커 표시
+              map.panTo(currentPos);
+              marker.setMap(null);
+              // 마커를 결과값으로 받은 위치로 옮긴다.
+              marker.setPosition(currentPos);
+              marker.setMap(map);
+            }
+          });
+        },
+      }).open();
+    } else {
+      alert('카카오map 로드가 안됨');
+    }
+  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [previewFile, setPreviewFile] = useState('');
 
   const {email, displayName, uid} = auth.currentUser;
-
+  const [addrInput, setAddrInput] = useState('');
   const [formState, setFormState] = useState({
     title: '',
     content: '',
@@ -64,7 +122,7 @@ function WriteNewFix() {
     timeStyle: 'short',
   }).format(new Date());
 
-  let cancleBtn = () => {
+  let cancelBtn = () => {
     dispatch(
       showPublicModal({
         isUse: true,
@@ -100,6 +158,7 @@ function WriteNewFix() {
               uid,
               displayName,
               email,
+              addrInput,
             };
 
             //3. 파이어스토어에 데이터 저장
@@ -154,12 +213,17 @@ function WriteNewFix() {
             <></>
           )}
 
-          <div>
-            <p>위치</p>
-          </div>
+          <ScDivMapSearch>
+            <div onClick={searchAddress}>
+              <input id="addr" value={addrInput} onChange={event => setAddrInput(event.target.value)} />
+              <button type="button">검색</button>
+            </div>
+            <div id="map" style={{width: '100%', height: '400px'}}></div>
+          </ScDivMapSearch>
+
           <ScDivButton>
             <ScButtonFix type="submit">Fix하기</ScButtonFix>
-            <ScButtonFix type="button" onClick={cancleBtn}>
+            <ScButtonFix type="button" onClick={cancelBtn}>
               취소
             </ScButtonFix>
           </ScDivButton>
@@ -194,8 +258,8 @@ const ScDiv = styled.div`
 
   & img {
     object-fit: cover;
-    width: 400px;
-    height: 300px;
+    width: 200px;
+    height: 150px;
   }
 `;
 
@@ -203,6 +267,13 @@ const ScImageLogo = styled.image`
   height: 30%;
   width: 30%;
   z-index: 100;
+`;
+
+const ScDivMapSearch = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const ScDivFileUpload = styled.div`
