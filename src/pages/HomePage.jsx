@@ -7,11 +7,13 @@ import {db} from '../shared/firebase';
 import {collection, getDocs} from '@firebase/firestore';
 import {getApp} from 'firebase/app';
 import {getStorage} from 'firebase/storage';
-import {auth} from '../shared/firebase';
+import {useSelector} from 'react-redux';
+
 const firebaseApp = getApp();
 
 export default function Homepage() {
   const navigate = useNavigate();
+  const {isLogin} = useSelector(state => state.auth);
   const [docs, setDocs] = useState([]);
   useEffect(() => {
     const dataReading = async () => {
@@ -22,6 +24,7 @@ export default function Homepage() {
         // console.log(data, '이게 데이타 ');
         // console.log(doc.id, ' 이게 독 아이디');
         dataArr.push({...data, id: doc.id});
+        dataArr = dataArr.sort((a, b) => b.date - a.date);
       });
 
       setDocs(dataArr);
@@ -33,13 +36,12 @@ export default function Homepage() {
   }, []);
   const {content, date, id, image_url, title} = docs;
   // 가운데 정렬 타이틀 하고 css다듬고 아이디 빼고 지도 하기 아웃렛 하기  const user = localStorage.getItem('uid');
-  const [isLoggedIn] = useState(auth.currentUser !== null);
 
   return (
     <Body>
       <Fixbar>
         <span>최근Fix한곳</span>
-        {isLoggedIn && <AddNew />}
+        {isLogin ? <AddNew /> : <></>}
       </Fixbar>
       <ListWrapper>
         {docs.map(item => {
@@ -83,10 +85,13 @@ const Fixbar = styled.div`
 `;
 
 const ListWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25%, auto));
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
   height: 100%;
+  gap: 10px;
 `;
 
 const PhotoWrapper = styled.div`
