@@ -7,6 +7,7 @@ import {getAuth, updateProfile} from '@firebase/auth';
 import {updateNickname, updatePhoto} from '../redux/modules/Auth';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {storage} from '../shared/firebase';
+import ListInMypage from '../components/UI/ListInMypage';
 
 const ProfilePage = () => {
   const auth = getAuth();
@@ -144,7 +145,8 @@ const ProfilePage = () => {
       <section>
         <h2>내 Fix보기</h2>
         <div>지도</div>
-      </section>
+      </section>{' '}
+      <ListInMypage />
     </ScMyPageWrapper>
   );
 };
