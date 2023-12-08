@@ -19,7 +19,7 @@ function DetailPage() {
   const navegateAddEdetail = () => {
     navigate(`/editdetail/${id}`);
   };
-
+  console.log(fix);
   useEffect(() => {
     dispatch(__getFix(id));
   }, []);
@@ -37,6 +37,7 @@ function DetailPage() {
       return;
     }
   };
+  //
   if (isLoading) {
     <h1>Loding..</h1>;
   }
@@ -47,30 +48,34 @@ function DetailPage() {
   }
 
   return (
-    <ScContainer>
-      <ScMain>
-        <ScImg src={fix.image_url}></ScImg>
-        <ScTitleBox>
-          <ScH1>{fix.title} </ScH1>
-        </ScTitleBox>
-        <ScP>{fix.content}</ScP>
-        <Map />
-        <ScBtnBox>
-          {user ? (
-            user.email !== fix.email ? (
-              <></>
-            ) : (
-              <>
-                <SubButton onClick={navegateAddEdetail}>수정</SubButton>
-                <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
-              </>
-            )
-          ) : (
-            <></>
-          )}
-        </ScBtnBox>
-      </ScMain>
-    </ScContainer>
+    <>
+      {fix && (
+        <ScContainer>
+          <ScMain>
+            <ScImg src={fix.image_url}></ScImg>
+            <ScTitleBox>
+              <ScH1>{fix.title} </ScH1>
+            </ScTitleBox>
+            <ScP>{fix.content}</ScP>
+            <Map />
+            <ScBtnBox>
+              {user ? (
+                user.email !== fix.email ? (
+                  <></>
+                ) : (
+                  <>
+                    <SubButton onClick={navegateAddEdetail}>수정</SubButton>
+                    <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
+                  </>
+                )
+              ) : (
+                <></>
+              )}
+            </ScBtnBox>
+          </ScMain>
+        </ScContainer>
+      )}
+    </>
   );
 }
 
