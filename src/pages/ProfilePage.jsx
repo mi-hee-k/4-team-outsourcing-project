@@ -15,7 +15,7 @@ const ProfilePage = () => {
   const {displayName, photoURL} = userInfo;
   const [nickNameEditShown, setNickNameEditShown] = useState(false);
   const [photoEditShown, setPhotoEditShown] = useState(false);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(displayName);
   const [imgFile, setImgFile] = useState('');
   const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
@@ -91,7 +91,6 @@ const ProfilePage = () => {
 
   return (
     <ScMyPageWrapper>
-      <Header />
       <section>
         <h2>마이페이지</h2>
         <ScProfileWrapper>
@@ -156,14 +155,8 @@ const ScMyPageWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  padding: 50px 0;
   text-align: center;
-
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
 
   h2 {
     font-size: 2rem;
@@ -174,6 +167,7 @@ const ScMyPageWrapper = styled.div`
   hr {
     width: 80%;
     background-color: #eee;
+    margin-top: 50px;
     margin-bottom: 50px;
   }
 

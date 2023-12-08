@@ -6,7 +6,6 @@ import Modal from './Modal/Modal';
 
 function AddNew() {
   const modal = useSelector(state => state.modal);
-  const user = localStorage.getItem('uid');
   const dispatch = useDispatch();
 
   const openWriteModal = () => {
@@ -16,7 +15,7 @@ function AddNew() {
   return (
     <>
       <Btn onClick={openWriteModal}>Fix 하러가기</Btn>
-      {user && modal.isUseInput && <Modal />}
+      {modal.isUseInput && <Modal />}
     </>
   );
 }

@@ -1,36 +1,63 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from './Header';
 import styled, {css} from 'styled-components';
-
-import fakedata from '../fakedata.json';
 import AddNew from '../components/AddNew';
-
 import {useNavigate} from 'react-router';
+import {db} from '../shared/firebase';
+import {collection, getDocs} from '@firebase/firestore';
+import {getApp} from 'firebase/app';
+import {getStorage} from 'firebase/storage';
+import {useSelector} from 'react-redux';
+
+const firebaseApp = getApp();
 
 export default function Homepage() {
   const navigate = useNavigate();
-  const user = localStorage.getItem('uid');
+  const {isLogin} = useSelector(state => state.auth);
+  const [docs, setDocs] = useState([]);
+  useEffect(() => {
+    const dataReading = async () => {
+      const querySnapshot = await getDocs(collection(db, 'fixs'));
+      let dataArr = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        // console.log(data, '이게 데이타 ');
+        // console.log(doc.id, ' 이게 독 아이디');
+        dataArr.push({...data, id: doc.id});
+        dataArr = dataArr.sort((a, b) => b.date - a.date);
+      });
+
+      setDocs(dataArr);
+    };
+
+    dataReading();
+
+    // console.log(storage, '이게 스토리지 어레이');
+  }, []);
+  const {content, date, id, image_url, title} = docs;
+  // 가운데 정렬 타이틀 하고 css다듬고 아이디 빼고 지도 하기 아웃렛 하기  const user = localStorage.getItem('uid');
 
   return (
     <Body>
-      <Header />
       <Fixbar>
         <span>최근Fix한곳</span>
-        {user ? <AddNew /> : ''}
+        {isLogin ? <AddNew /> : <></>}
       </Fixbar>
       <ListWrapper>
-        {fakedata.map(item => {
+        {docs.map(item => {
           return (
             <List key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
-              <PhotoWrapper></PhotoWrapper>
+              <PhotoWrapper>
+                <img src={item.image_url} alt="" />
+              </PhotoWrapper>
               <UserInfo>
                 <Avatar>
                   {' '}
-                  <img src={item.avatar} alt="아바타이미지" />
+                  <img src="메롱" alt="" />
                 </Avatar>
                 <NicknameAndDate>
-                  <p>{item.nickname}</p>
-                  <time>{item.createdAt}</time>
+                  <p>{item.title}</p>
+                  <time>{item.date}</time>
                 </NicknameAndDate>
               </UserInfo>
               <Content>{item.content}</Content>
@@ -54,13 +81,17 @@ const Fixbar = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 50px;
+  font-size: 30px;
 `;
 
 const ListWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25%, auto));
+  justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
   height: 100%;
+  gap: 10px;
 `;
 
 const PhotoWrapper = styled.div`
@@ -71,6 +102,13 @@ const PhotoWrapper = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 10px;
+
+  overflow: hidden;
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 const List = styled.div`
   display: flex;
@@ -80,7 +118,7 @@ const List = styled.div`
   height: 300px;
   border-radius: 10px;
   margin: 0 10px;
-  background-color: lightgray;
+  background-color: var(--light-blue);
   margin: 20px;
   padding: 10px;
 
@@ -104,7 +142,7 @@ const NicknameAndDate = styled.div`
 `;
 
 const Content = styled.p`
-  background-color: gray;
+  background-color: var(--beige);
   border-radius: 12px;
   padding: 12px;
   height: 30%;
@@ -114,6 +152,7 @@ const Content = styled.p`
 `;
 
 const Avatar = styled.figure`
+  background-color: white;
   ${props => {
     switch (props.size) {
       case 'large':
@@ -138,3 +177,11 @@ const Avatar = styled.figure`
     border-radius: 50%;
   }
 `;
+// :root {
+//   --deep-blue: #39a7ff;
+//   --blue: #87c4ff;
+//   --light-blue: #e0f4ff;
+//   --beige: #ffeed9;
+//   --black: #000;
+//   --white: #fff;
+// }

@@ -9,6 +9,7 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
+import BasicMap from '../Map';
 function WriteNewFix() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -157,6 +158,7 @@ function WriteNewFix() {
           <div>
             <p>위치</p>
           </div>
+          <BasicMap />
           <ScDivButton>
             <ScButtonFix type="submit">Fix하기</ScButtonFix>
             <ScButtonFix type="button" onClick={cancleBtn}>

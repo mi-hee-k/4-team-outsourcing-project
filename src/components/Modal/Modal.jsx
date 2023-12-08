@@ -4,7 +4,6 @@ import WriteNewFix from './WriteNewFix';
 import {useDispatch, useSelector} from 'react-redux';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import PublicModal from './PublicModal';
-import {useNavigate} from 'react-router-dom';
 
 function Modal() {
   const publicModal = useSelector(state => state.publicModal);
@@ -69,6 +68,7 @@ const ScDiv = styled.div`
   width: 100%;
   height: 100vh;
   top: 0;
+  left: 0;
   border: none;
 `;
 
