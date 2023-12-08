@@ -1,53 +1,23 @@
-import React, {useEffect} from 'react';
-
+import React from 'react';
+import {useSelector} from 'react-redux';
+import {auth} from '../../shared/firebase';
 import styled, {css} from 'styled-components';
-import AddNew from '../components/AddNew';
-import {useNavigate} from 'react-router';
-import {db} from '../shared/firebase';
-import {collection, getDocs} from '@firebase/firestore';
-import {useDispatch, useSelector} from 'react-redux';
-import {setList} from '../redux/modules/fixList';
-import {auth} from '../shared/firebase';
-const {kakao} = window;
-
-export default function Homepage() {
+import {useNavigate} from 'react-router-dom';
+export default function ListInMypage() {
   const navigate = useNavigate();
-  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
-  // console.log('이게 이즈로긴', isLogin);
-  // const [docs, setDocs] = useState([]);
-  // const addlist = useSelector(state => state.list);
   const list = useSelector(state => state.fixList);
-  const dispatch = useDispatch();
-  // console.log('이게 리스트', addlist);
 
-  useEffect(() => {
-    const dataReading = async () => {
-      const querySnapshot = await getDocs(collection(db, 'fixs'));
-      let dataArr = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
+  console.log('리스트', list);
 
-        console.log(data, ' 이게 독 아이디');
-        dataArr.push({...data, id: doc.id});
-
-        // console.log(data.createdAt, '이게그거');
-        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-      });
-
-      dispatch(setList(dataArr));
-    };
-    // console.log('리랜더링 되니?');
-    dataReading();
-  }, []);
-
+  const filteredList = list.filter(item => {
+    // console.log(item.uid, '유아이디들', auth.currentUser);
+    return item.uid == auth.currentUser.uid;
+  });
+  //   console.log(filteredList, '필털드');
   return (
-    <Body>
-      <Fixbar>
-        <span>최근Fix한곳</span>
-        {isLogin ? <AddNew /> : <></>}
-      </Fixbar>
+    <>
       <ListWrapper>
-        {list.map(item => {
+        {filteredList.map(item => {
           return (
             <List key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
               <PhotoWrapper>
@@ -75,24 +45,9 @@ export default function Homepage() {
           );
         })}
       </ListWrapper>
-    </Body>
+    </>
   );
 }
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Fixbar = styled.div`
-  height: 100px;
-  width: 100vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 50px;
-  font-size: 30px;
-`;
 
 const ListWrapper = styled.div`
   display: grid;
@@ -187,11 +142,3 @@ const Avatar = styled.figure`
     border-radius: 50%;
   }
 `;
-// :root {
-//   --deep-blue: #39a7ff;
-//   --blue: #87c4ff;
-//   --light-blue: #e0f4ff;
-//   --beige: #ffeed9;
-//   --black: #000;
-//   --white: #fff;
-// }
