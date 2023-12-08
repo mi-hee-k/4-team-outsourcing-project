@@ -1,16 +1,17 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PinImage from '../asset/pin.png';
 import {useNavigate} from 'react-router-dom';
 import Button from '../components/UI/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../redux/modules/Auth';
+import {getAuth, signOut} from 'firebase/auth';
 
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {displayName, uid, photoURL, email, isLogin} = useSelector(state => state.auth);
-
+  const auth = getAuth();
   //   useEffect(() => {
   //     console.log(isLogin, displayName);
   //   }, []);
@@ -40,6 +41,8 @@ export default function Header() {
               <Button
                 onClick={() => {
                   dispatch(logout());
+                  navigate('/');
+                  auth.signOut();
                 }}
               >
                 로그아웃
