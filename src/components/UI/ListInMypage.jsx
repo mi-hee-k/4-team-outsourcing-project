@@ -1,19 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {auth} from '../../shared/firebase';
+import {auth, db} from '../../shared/firebase';
 import styled, {css} from 'styled-components';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
+
+import {collection, getDocs} from '@firebase/firestore';
+import {useDispatch} from 'react-redux';
+import {setList} from '../../redux/modules/fixList';
+
 export default function ListInMypage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const list = useSelector(state => state.fixList);
+  useEffect(() => {
+    const dataReading = async () => {
+      const querySnapshot = await getDocs(collection(db, 'fixs'));
+      let dataArr = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
 
-  console.log('리스트', list);
+        console.log(data, ' 이게 독 아이디');
+        dataArr.push({...data, id: doc.id});
 
+        // console.log(data.createdAt, '이게그거');
+        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
+      });
+
+      dispatch(setList(dataArr));
+    };
+    // console.log('리랜더링 되니?');
+    dataReading();
+  }, []);
   const filteredList = list.filter(item => {
     // console.log(item.uid, '유아이디들', auth.currentUser);
     return item.uid == auth.currentUser.uid;
   });
-  //   console.log(filteredList, '필털드');
+  console.log(filteredList, '필털드');
   return (
     <>
       <ListWrapper>
@@ -35,11 +57,9 @@ export default function ListInMypage() {
                 </NicknameAndDate>
               </UserInfo>
               <Content>
-                <span>제목:</span>
-                {item.title}
-                <br /> <span>내용:</span>
-                {item.content}
-                {/* {item.createdAt.seconds} */}
+                <h1>{item.title}</h1>
+                <h3>{item.addrInput}</h3>
+                <h2>{item.content}</h2>
               </Content>
             </List>
           );
@@ -50,11 +70,12 @@ export default function ListInMypage() {
 }
 
 const ListWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25%, auto));
-  justify-content: center;
+  display: flex;
+  /* grid-template-columns: repeat(auto-fill, minmax(25%, auto)); */
+  text-align: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  width: 100%;
+  width: 74%;
   height: 100%;
   gap: 10px;
 `;
@@ -79,8 +100,8 @@ const List = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 25vw;
-  height: 300px;
+  width: 300px;
+  height: 400px;
   border-radius: 10px;
   margin: 0 10px;
   background-color: var(--light-blue);
@@ -98,22 +119,50 @@ const UserInfo = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+  margin: 10px auto;
 `;
 
 const NicknameAndDate = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 3px;
   gap: 6px;
+  & p {
+    font-size: 20px;
+  }
+  & time {
+    font-size: 12px;
+    color: gray;
+  }
 `;
 
-const Content = styled.p`
+const Content = styled.div`
   background-color: var(--beige);
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   height: 30%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 15px;
+  gap: 5px;
+  & h1 {
+    font-size: 20px;
+    border-bottom: 1px solid gray;
+    padding-bottom: 5px;
+  }
+  & h2 {
+    font-size: 15px;
+
+    padding-bottom: 5px;
+    height: 40%;
+  }
+  & h3 {
+    font-size: 10px;
+    color: gray;
+  }
 `;
 
 const Avatar = styled.figure`
@@ -127,8 +176,8 @@ const Avatar = styled.figure`
         `;
       default:
         return css`
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
         `;
     }
   }}

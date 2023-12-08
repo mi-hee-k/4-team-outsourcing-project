@@ -98,7 +98,7 @@ const ScContainer = styled.div`
   height: 200vh;
 `;
 const ScMain = styled.form`
-  width: 80vw;
+  width: 60%;
   height: 170vh;
   border: 2px solid #f6f6f6;
 `;

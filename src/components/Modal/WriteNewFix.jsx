@@ -10,11 +10,13 @@ import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import {addList} from '../../redux/modules/fixList';
-
+import bonobono from '../../asset/bonobono.jpg';
 function WriteNewFix() {
   //지도
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
+  const [latitude, seLatitude] = useState(''); //위도
+  const [longitude, setLongitude] = useState(''); //경도
 
   // 1) 카카오맵 불러오기
   useEffect(() => {
@@ -49,6 +51,9 @@ function WriteNewFix() {
               //첫번째 결과의 값을 활용
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+
+              seLatitude(currentPos.La);
+              setLongitude(currentPos.Ma);
 
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
               // 선택한 주소로 입력 필드 업데이트
@@ -156,12 +161,14 @@ function WriteNewFix() {
               content,
               date: formattedDate,
               createdAt: new Date(),
-              image_url: uploadImageUrl,
+              image_url: uploadImageUrl ? uploadImageUrl : bonobono,
               uid,
               displayName,
               email,
               photoURL: photoURL ? photoURL : pinImg,
               addrInput,
+              latitude,
+              longitude,
             };
 
             //3. 파이어스토어에 데이터 저장
@@ -178,51 +185,54 @@ function WriteNewFix() {
         }}
       >
         <ScDiv>
-          <div>
-            <h1>어디로 '픽스' 할까요?</h1>
-          </div>
+          <h1>어디로 '픽스' 할까요?</h1>
+
           <div>
             <ScInputTitle
               name="title"
               value={title}
               onChange={onChangeHandler}
-              placeholder="제목을 입력해주세요."
+              placeholder=" 제목을 입력해주세요."
               maxLength={30}
             ></ScInputTitle>
           </div>
           <div>
             <ScTextareaContent
               name="content"
-              placeholder="내용을 입력해주세요"
+              placeholder=" 내용을 입력해주세요"
               value={content}
               onChange={onChangeHandler}
             ></ScTextareaContent>
           </div>
-
-          <ScDivFileUpload>
-            <input type="file" name="selectedFile" id="fileAttach" onChange={handleFileSelect}></input>
-            <label htmlFor="fileAttach">사진 선택</label>
-
-            <ScButtonDelete type="button" id="fileDelete" onClick={handleFileDelete}></ScButtonDelete>
-            <label htmlFor="fileDelete">사진 삭제</label>
-          </ScDivFileUpload>
-
-          {previewFile ? (
-            <ScDivPreview>
-              <label>
+          {!previewFile && (
+            <ScDivFileUpload>
+              <input type="file" name="selectedFile" id="fileAttach" onChange={handleFileSelect}></input>
+              <label htmlFor="fileAttach">사진 선택</label>
+            </ScDivFileUpload>
+          )}
+          {previewFile && (
+            <>
+              <ScDivPreview>
                 <img name="previewFile" size="large" src={previewFile} />
-              </label>
-            </ScDivPreview>
-          ) : (
-            <></>
+
+                <ScButtonDelete type="button" id="fileDelete" onClick={handleFileDelete}></ScButtonDelete>
+                <label htmlFor="fileDelete">사진 삭제</label>
+              </ScDivPreview>
+            </>
           )}
 
           <ScDivMapSearch>
             <div onClick={searchAddress}>
-              <input id="addr" value={addrInput} onChange={event => setAddrInput(event.target.value)} />
-              <button type="button">검색</button>
+              <input
+                id="addr"
+                placeholder=" 📍 장소 검색"
+                value={addrInput}
+                onChange={event => setAddrInput(event.target.value)}
+              />
+              <button type="button">장소 검색</button>
             </div>
-            <div id="map" style={{width: '100%', height: '400px'}}></div>
+
+            <div id="map" style={{width: '100%', height: '250px'}}></div>
           </ScDivMapSearch>
 
           <ScDivButton>
@@ -237,6 +247,10 @@ function WriteNewFix() {
   );
 }
 
+const ScBody = styled.body`
+  background-color: var(--light-blue);
+`;
+
 const ScDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -246,9 +260,10 @@ const ScDiv = styled.div`
   margin: 20px auto;
 
   & h1 {
-    font-size: 30px;
-    margin-bottom: 20px;
+    font-size: 25px;
+    margin: 15px auto;
     text-align: center;
+    font-weight: 600;
   }
   & div {
     width: 100%;
@@ -268,9 +283,9 @@ const ScDiv = styled.div`
 `;
 
 const ScImageLogo = styled.image`
-  height: 30%;
-  width: 30%;
-  z-index: 100;
+  z-index: 999;
+  width: 100px;
+  height: 100px;
 `;
 
 const ScDivMapSearch = styled.div`
@@ -278,6 +293,32 @@ const ScDivMapSearch = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  margin: 0;
+  padding-left: 0;
+
+  & div {
+    padding: 0;
+  }
+
+  & button {
+    display: none;
+  }
+  & input {
+    width: 100%;
+    border: 1px solid var(--deep-blue);
+    border-radius: 8px;
+    cursor: pointer;
+    height: 30px;
+    &:hover {
+      border: 1px solid var(--deep-blue);
+      box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
+    }
+  }
+`;
+
+const ScDivMapShow = styled.div`
+  width: 100%;
+  height: 250px;
 `;
 
 const ScDivFileUpload = styled.div`
@@ -304,6 +345,11 @@ const ScDivFileUpload = styled.div`
     font-weight: 500;
     font-size: 14px;
     outline: none;
+    cursor: pointer;
+    &:hover {
+      border: 1px solid var(--deep-blue);
+      box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
+    }
   }
 `;
 
@@ -321,19 +367,37 @@ const ScDivPreview = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
+
+  & label {
+    border: 1px solid var(--deep-blue);
+    background-color: #fff;
+    color: var(--deep-blue);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 500;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    &:hover {
+      border: 1px solid var(--deep-blue);
+      box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
+    }
+  }
 `;
 
 const ScInputTitle = styled.input`
   width: 100%;
   outline: none;
-  font-size: 20px;
+  font-size: 19px;
   margin-top: 8px;
   margin-bottom: 8px;
   //padding-bottom: 10px;
   border: none;
   font-weight: 500;
-  //border: 1px solid var(--black);
-  background-color: var(--light-blue);
+  border: 1px solid var(--deep-blue);
+  border-radius: 8px;
+  //background-color: var(--light-blue);
+  padding: 20px auto;
   &::placeholder {
     color: #bbb;
   }
@@ -352,9 +416,11 @@ const ScTextareaContent = styled.textarea`
   border: none;
   resize: none;
   width: 100%;
-
+  padding-top: 10px;
   color: var(--black);
-  background-color: var(--light-blue);
+  //background-color: var(--light-blue);
+  border: 1px solid var(--deep-blue);
+  border-radius: 8px;
   &::placeholder {
     color: #bbb;
   }
@@ -369,9 +435,11 @@ const ScButtonFix = styled.button`
   font-size: 15px;
   background-color: var(--deep-blue);
   color: white;
+
   &:hover {
     border: 1px solid var(--deep-blue);
     box-shadow: rgb(57, 167, 255, 0.4) 0px 0px 0px 3px;
+    cursor: pointer;
   }
   border: none;
 `;
