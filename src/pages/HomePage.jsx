@@ -1,36 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled, {css} from 'styled-components';
 import AddNew from '../components/AddNew';
 import {useNavigate} from 'react-router';
 import {useDispatch, useSelector} from 'react-redux';
-import {Update, useUpdate} from '../components/UI/CustomHook';
 import {useReadFirestore} from '../components/UI/CustomHook';
-import {DataReading} from '../components/UI/CustomHook';
-import {setList} from '../redux/modules/fixList';
-import {auth} from '../shared/firebase';
-import {collection, addDoc, setDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
-import {db} from '../shared/firebase';
 export default function Homepage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
   useReadFirestore();
   const list = useSelector(state => state.fixList);
-  // const dataReading = async () => {
-  //   const querySnapshot = await getDocs(collection(db, 'fixs'));
-  //   let dataArr = [];
-  //   querySnapshot.forEach(doc => {
-  //     const data = doc.data();
-
-  //     // console.log(data, ' 이게 독 아이디');
-  //     dataArr.push({...data, id: doc.id});
-
-  //     // console.log(data.createdAt, '이게그거');
-  //     dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-  //   });
-
-  //   dispatch(setList(dataArr));
-  // };
 
   return (
     <Body>
@@ -72,6 +51,7 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 150px;
 `;
 
 const Fixbar = styled.div`
@@ -80,7 +60,7 @@ const Fixbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 150px;
+  padding: 0 150px;
   font-size: 30px;
   & span {
     font-weight: 600;
@@ -90,9 +70,20 @@ const Fixbar = styled.div`
 const ListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  width: 80%;
-  height: 100%;
+  width: 100%;
   gap: 10px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const PhotoWrapper = styled.div`
@@ -205,11 +196,3 @@ const Avatar = styled.figure`
     border-radius: 50%;
   }
 `;
-// :root {
-//   --deep-blue: #39a7ff;
-//   --blue: #87c4ff;
-//   --light-blue: #e0f4ff;
-//   --beige: #ffeed9;
-//   --black: #000;
-//   --white: #fff;
-// }

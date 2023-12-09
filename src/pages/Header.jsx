@@ -12,9 +12,6 @@ export default function Header() {
   const dispatch = useDispatch();
   const {displayName, uid, photoURL, email, isLogin} = useSelector(state => state.auth);
   const auth = getAuth();
-  //   useEffect(() => {
-  //     console.log(isLogin, displayName);
-  //   }, []);
 
   return (
     <>
