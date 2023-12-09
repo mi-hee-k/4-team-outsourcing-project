@@ -20,14 +20,16 @@ const MapComponent = ({coordinates}) => {
       {/* 지도 컴포넌트 */}
       <Map
         center={{
-          lat: 37.566826,
-          lng: 126.9786567,
+          lat: 36.466826,
+          lng: 127.5786567,
         }}
         style={{
           width: '80%',
           height: '500px',
+          margin: '0 auto',
+          border: `1px solid #E0F4FF`,
         }}
-        level={14}
+        level={13}
       >
         <MarkerClusterer
           averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
