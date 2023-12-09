@@ -175,7 +175,7 @@ function WriteNewFix() {
               name="title"
               value={title}
               onChange={onChangeHandler}
-              placeholder=" 제목을 입력해주세요."
+              placeholder="제목을 입력해주세요."
               maxLength={30}
               required
             ></ScInputTitle>
@@ -183,7 +183,7 @@ function WriteNewFix() {
           <div>
             <ScTextareaContent
               name="content"
-              placeholder=" 내용을 입력해주세요"
+              placeholder="내용을 입력해주세요"
               value={content}
               onChange={onChangeHandler}
               required
@@ -218,10 +218,11 @@ function WriteNewFix() {
               />
               <button type="button">장소 검색</button>
             </div>
+
+            <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '230px'}}>
+              <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
+            </Map>
           </ScDivMapSearch>
-          <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '360px'}}>
-            <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
-          </Map>
 
           <ScDivButton>
             <ScButtonFix type="submit">Fix하기</ScButtonFix>
@@ -245,7 +246,7 @@ const ScDiv = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 7px;
-  margin: 20px auto;
+  margin: 10px auto;
 
   & h1 {
     font-size: 25px;
@@ -386,7 +387,7 @@ const ScInputTitle = styled.input`
   border-radius: 8px;
   //background-color: var(--light-blue);
   //padding: 20px auto;
-  padding-left: 10px;
+  padding: 10px;
   &::placeholder {
     color: #bbb;
   }
@@ -399,7 +400,7 @@ const ScTextareaContent = styled.textarea`
   box-sizing: content-box;
   outline: none;
   line-height: 1.6em;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-size: 15px;
   word-break: keep-all;
   border: none;
@@ -410,7 +411,8 @@ const ScTextareaContent = styled.textarea`
   //background-color: var(--light-blue);
   border: 1px solid var(--deep-blue);
   border-radius: 8px;
-  padding-left: 13px;
+  //padding-left: 13px;
+  padding: 10px;
   &::placeholder {
     color: #bbb;
   }
