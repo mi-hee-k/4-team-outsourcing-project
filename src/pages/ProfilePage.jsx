@@ -7,7 +7,7 @@ import {getAuth, updateProfile} from '@firebase/auth';
 import {updateNickname, updatePhoto} from '../redux/modules/Auth';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {db, storage} from '../shared/firebase';
-import ListInMypage from '../components/UI/ListInMypage';
+// import ListInMypage from '../components/UI/ListInMypage';
 import MapComponent from '../components/MapComponent';
 import {collection, getDocs} from '@firebase/firestore';
 import {setList} from '../redux/modules/fixList';
@@ -48,7 +48,15 @@ const ProfilePage = () => {
   });
 
   const coordinates = filteredList.map(item => {
-    return {lat: item.latitude, lng: item.longitude};
+    console.log(item);
+    return {
+      id: item.id,
+      title: item.title,
+      lat: item.latitude,
+      lng: item.longitude,
+      isOpen: false,
+      image: item.image_url,
+    };
   });
 
   // 여기까지
@@ -176,8 +184,7 @@ const ProfilePage = () => {
       <hr />
       <section>
         <h2>내 Fix보기</h2>
-        <div>지도</div>
-      </section>{' '}
+      </section>
       {/* <ListInMypage /> */}
       <MapComponent coordinates={coordinates} />
     </ScMyPageWrapper>
