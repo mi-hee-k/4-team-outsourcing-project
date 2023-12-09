@@ -16,16 +16,16 @@ function DetailPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLoading, isError, fix} = useSelector(state => state.fix);
+  // const newData = fix.fix.newData;
   const navigateEditdetail = () => {
     navigate(`/editdetail/${id}`);
   };
-  console.log(fix);
+  console.log('이미지 유알엘', fix.image_url);
   useEffect(() => {
     dispatch(__getFix(id));
   }, []);
 
   const user = auth.currentUser;
-  console.log({user});
 
   const deletePost = async post => {
     const deleteCheck = window.confirm('삭제하시겠습니까?');
@@ -43,7 +43,6 @@ function DetailPage() {
   }
 
   if (isError) {
-    console.log('에러메세지다', isError);
     toast.success('오류가 발생했습니다. 다시 시도해주세요');
     navigate('/');
   }
@@ -98,6 +97,7 @@ const ScImg = styled.img`
 `;
 
 const ScH1 = styled.h1`
+  height: max-content;
   margin-left: 30px;
   font-size: 2rem;
   background: none;
@@ -107,14 +107,12 @@ const ScH1 = styled.h1`
 `;
 
 const ScTitleBox = styled.div`
-  height: 70px;
+  height: max-content;
   border-bottom: 2px solid var(--light-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  @media only screen and (min-width: 1500px) {
-    height: 80px;
-  }
+  padding: 25px;
 `;
 
 const ScP = styled.p`
@@ -128,6 +126,8 @@ const ScP = styled.p`
 `;
 
 const ScBtnBox = styled.div`
+  width: 93%;
+  height: 70px;
   display: flex;
   flex-direction: row-reverse;
   align-items: center;

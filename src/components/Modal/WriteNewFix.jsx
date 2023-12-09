@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {auth, db, storage} from '../../shared/firebase';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
@@ -36,7 +36,6 @@ function WriteNewFix() {
               //첫번째 결과의 값을 활용
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-              console.log('currentPos다', addrData);
               seLatitude(currentPos.Ma);
               setLongitude(currentPos.La);
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
@@ -52,8 +51,6 @@ function WriteNewFix() {
       alert('카카오map 로드가 안됨');
     }
   };
-
-  console.log(buildingName);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -127,41 +124,39 @@ function WriteNewFix() {
   };
 
   const formOnSubmit = async event => {
-    {
-      event.preventDefault();
+    event.preventDefault();
 
-      try {
-        //1. 이미지 파일 업로드
-        const uploadImageUrl = await handleUpload();
+    try {
+      //1. 이미지 파일 업로드
+      const uploadImageUrl = await handleUpload();
 
-        //2. 모달창에 입력된 새로운 데이터
-        const newData = {
-          title,
-          content,
-          date: formattedDate,
-          createdAt: new Date(),
-          image_url: uploadImageUrl ? uploadImageUrl : bonobono,
-          uid,
-          displayName,
-          email,
-          photoURL: photoURL ? photoURL : pinImg,
-          addrInput,
-          latitude,
-          longitude,
-          buildingName,
-        };
+      //2. 모달창에 입력된 새로운 데이터
+      const newData = {
+        title,
+        content,
+        date: formattedDate,
+        createdAt: new Date(),
+        image_url: uploadImageUrl ? uploadImageUrl : bonobono,
+        uid,
+        displayName,
+        email,
+        photoURL: photoURL ? photoURL : pinImg,
+        addrInput,
+        latitude,
+        longitude,
+        buildingName,
+      };
 
-        //3. 파이어스토어에 데이터 저장
-        const collectionRef = collection(db, 'fixs');
-        const res = await addDoc(collectionRef, newData);
-        console.log(res.id);
-        //4. 모달닫기
-        dispatch(addList({...newData, id: res.id}));
-        dispatch(closeAddModal());
-        toast.success('저장되었습니다.');
-      } catch (Error) {
-        console.log('[form Error] (WriteNewFix.jsx): ', Error);
-      }
+      //3. 파이어스토어에 데이터 저장
+      const collectionRef = collection(db, 'fixs');
+      const res = await addDoc(collectionRef, newData);
+
+      //4. 모달닫기
+      dispatch(addList({...newData, id: res.id}));
+      dispatch(closeAddModal());
+      toast.success('저장되었습니다.');
+    } catch (Error) {
+      console.log('[form Error] (WriteNewFix.jsx): ', Error);
     }
   };
 
@@ -175,7 +170,7 @@ function WriteNewFix() {
               name="title"
               value={title}
               onChange={onChangeHandler}
-              placeholder=" 제목을 입력해주세요."
+              placeholder="제목을 입력해주세요."
               maxLength={30}
               required
             ></ScInputTitle>
@@ -183,7 +178,7 @@ function WriteNewFix() {
           <div>
             <ScTextareaContent
               name="content"
-              placeholder=" 내용을 입력해주세요"
+              placeholder="내용을 입력해주세요"
               value={content}
               onChange={onChangeHandler}
               required
@@ -218,10 +213,11 @@ function WriteNewFix() {
               />
               <button type="button">장소 검색</button>
             </div>
+
+            <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '230px'}}>
+              <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
+            </Map>
           </ScDivMapSearch>
-          <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '360px'}}>
-            <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
-          </Map>
 
           <ScDivButton>
             <ScButtonFix type="submit">Fix하기</ScButtonFix>
@@ -235,17 +231,13 @@ function WriteNewFix() {
   );
 }
 
-const ScBody = styled.body`
-  background-color: var(--light-blue);
-`;
-
 const ScDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 7px;
-  margin: 20px auto;
+  margin: 10px auto;
 
   & h1 {
     font-size: 25px;
@@ -268,12 +260,6 @@ const ScDiv = styled.div`
     width: 200px;
     height: 150px;
   }
-`;
-
-const ScImageLogo = styled.image`
-  z-index: 999;
-  width: 100px;
-  height: 100px;
 `;
 
 const ScDivMapSearch = styled.div`
@@ -302,11 +288,6 @@ const ScDivMapSearch = styled.div`
       box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
     }
   }
-`;
-
-const ScDivMapShow = styled.div`
-  width: 100%;
-  height: 250px;
 `;
 
 const ScDivFileUpload = styled.div`
@@ -386,7 +367,7 @@ const ScInputTitle = styled.input`
   border-radius: 8px;
   //background-color: var(--light-blue);
   //padding: 20px auto;
-  padding-left: 10px;
+  padding: 10px;
   &::placeholder {
     color: #bbb;
   }
@@ -399,7 +380,7 @@ const ScTextareaContent = styled.textarea`
   box-sizing: content-box;
   outline: none;
   line-height: 1.6em;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   font-size: 15px;
   word-break: keep-all;
   border: none;
@@ -410,7 +391,8 @@ const ScTextareaContent = styled.textarea`
   //background-color: var(--light-blue);
   border: 1px solid var(--deep-blue);
   border-radius: 8px;
-  padding-left: 13px;
+  //padding-left: 13px;
+  padding: 10px;
   &::placeholder {
     color: #bbb;
   }

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import {useState} from 'react';
 import {useKakaoLoader} from 'react-kakao-maps-sdk';
@@ -10,6 +10,7 @@ function EditMap() {
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState();
   const [searchBtn, setSearchBtn] = useState();
+  const inputRef = useRef();
 
   useEffect(() => {
     if (!map) return;
@@ -45,14 +46,21 @@ function EditMap() {
   //   const searchInputHandler = e => {
   //     setSearch(e.target.value);
   //   };
-  const onClickHandler = e => {
-    setSearchBtn(document.getElementById('search-input').value);
+  const onClickHandler = () => {
+    const searchKeyword = {
+      searchInput: inputRef.current.value,
+    };
+
+    setSearchBtn(searchKeyword.searchInput);
   };
 
-  console.log('마커다', info, markers);
+  const onClickMarkerHandler = marker => {
+    setInfo(marker);
+  };
+
   return (
     <>
-      <input type="string" id="search-input" />
+      <input type="string" name="searchInput" ref={inputRef} />
       <button type="button" onClick={onClickHandler}>
         검색
       </button>
