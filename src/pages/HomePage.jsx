@@ -1,46 +1,41 @@
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 import styled, {css} from 'styled-components';
 import AddNew from '../components/AddNew';
 import {useNavigate} from 'react-router';
-import {db} from '../shared/firebase';
-import {collection, getDocs} from '@firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
+import {Update, useUpdate} from '../components/UI/CustomHook';
+import {useReadFirestore} from '../components/UI/CustomHook';
+import {DataReading} from '../components/UI/CustomHook';
 import {setList} from '../redux/modules/fixList';
-
+import {auth} from '../shared/firebase';
+import {collection, addDoc, setDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
+import {db} from '../shared/firebase';
 export default function Homepage() {
   const navigate = useNavigate();
-  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
-  // console.log('이게 이즈로긴', isLogin);
-  // const [docs, setDocs] = useState([]);
-  // const addlist = useSelector(state => state.list);
-  const list = useSelector(state => state.fixList);
   const dispatch = useDispatch();
-  // console.log('이게 리스트', addlist);
+  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
+  useReadFirestore();
+  const list = useSelector(state => state.fixList);
+  // const dataReading = async () => {
+  //   const querySnapshot = await getDocs(collection(db, 'fixs'));
+  //   let dataArr = [];
+  //   querySnapshot.forEach(doc => {
+  //     const data = doc.data();
 
-  useEffect(() => {
-    const dataReading = async () => {
-      const querySnapshot = await getDocs(collection(db, 'fixs'));
-      let dataArr = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
+  //     // console.log(data, ' 이게 독 아이디');
+  //     dataArr.push({...data, id: doc.id});
 
-        // console.log(data, ' 이게 독 아이디');
-        dataArr.push({...data, id: doc.id});
+  //     // console.log(data.createdAt, '이게그거');
+  //     dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
+  //   });
 
-        // console.log(data.createdAt, '이게그거');
-        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-      });
-
-      dispatch(setList(dataArr));
-    };
-    // console.log('리랜더링 되니?');
-    dataReading();
-  }, []);
+  //   dispatch(setList(dataArr));
+  // };
 
   return (
     <Body>
       <Fixbar>
-        <span>최근Fix한곳</span>
+        <span>최근 Fix 한 곳</span>
         {isLogin ? <AddNew /> : <></>}
       </Fixbar>
       <ListWrapper>
@@ -85,17 +80,17 @@ const Fixbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 50px;
+  padding: 0px 150px;
   font-size: 30px;
+  & span {
+    font-weight: 600;
+  }
 `;
 
 const ListWrapper = styled.div`
-  display: flex;
-  /* grid-template-columns: repeat(auto-fill, minmax(25%, auto)); */
-
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 74%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 80%;
   height: 100%;
   gap: 10px;
 `;

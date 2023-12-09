@@ -4,33 +4,14 @@ import {auth, db} from '../../shared/firebase';
 import styled, {css} from 'styled-components';
 import {useNavigate} from 'react-router';
 
-import {collection, getDocs} from '@firebase/firestore';
 import {useDispatch} from 'react-redux';
-import {setList} from '../../redux/modules/fixList';
+import {useReadFirestore} from './CustomHook';
 
 export default function ListInMypage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const list = useSelector(state => state.fixList);
-  useEffect(() => {
-    const dataReading = async () => {
-      const querySnapshot = await getDocs(collection(db, 'fixs'));
-      let dataArr = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-
-        console.log(data, ' 이게 독 아이디');
-        dataArr.push({...data, id: doc.id});
-
-        // console.log(data.createdAt, '이게그거');
-        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-      });
-
-      dispatch(setList(dataArr));
-    };
-    // console.log('리랜더링 되니?');
-    dataReading();
-  }, []);
+  useReadFirestore();
   const filteredList = list.filter(item => {
     // console.log(item.uid, '유아이디들', auth.currentUser);
     return item.uid == auth.currentUser.uid;
@@ -70,14 +51,12 @@ export default function ListInMypage() {
 }
 
 const ListWrapper = styled.div`
-  display: flex;
-  /* grid-template-columns: repeat(auto-fill, minmax(25%, auto)); */
-  text-align: start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 74%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 80%;
   height: 100%;
   gap: 10px;
+  text-align: start;
 `;
 
 const PhotoWrapper = styled.div`
@@ -146,8 +125,8 @@ const Content = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 15px;
   gap: 5px;
+  font-size: 10px;
   & h1 {
     font-size: 20px;
     border-bottom: 1px solid gray;
