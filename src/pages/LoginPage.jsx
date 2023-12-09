@@ -91,7 +91,16 @@ const Login = () => {
       console.log(2);
       navigate('/');
     } catch (error) {
-      console.error(error);
+      toast.error('로그인 정보를 다시 확인해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 
