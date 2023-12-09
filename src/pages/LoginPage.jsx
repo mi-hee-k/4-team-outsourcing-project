@@ -74,7 +74,6 @@ const Login = () => {
     checkInputs();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
-      console.log(userCredential.user.accessToken);
 
       toast.success('로그인 성공!', {
         position: 'top-center',
@@ -88,10 +87,18 @@ const Login = () => {
       });
       localStorage.setItem('accessToken', userCredential.user.accessToken);
       dispatch(login(userCredential.user));
-      console.log(2);
       navigate('/');
     } catch (error) {
-      console.error(error);
+      toast.error('로그인 정보를 다시 확인해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 
@@ -115,7 +122,16 @@ const Login = () => {
       navigate('/');
       dispatch(login(userCredential.user));
     } catch (error) {
-      console.log(error.message);
+      toast.error('로그인 정보를 다시 확인해주세요', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 

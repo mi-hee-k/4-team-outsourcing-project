@@ -11,6 +11,8 @@ import {db, storage} from '../shared/firebase';
 import MapComponent from '../components/MapComponent';
 import {collection, getDocs} from '@firebase/firestore';
 import {setList} from '../redux/modules/fixList';
+import EditBtn from '../components/UI/CustomHook';
+import {toast} from 'react-toastify';
 
 const ProfilePage = () => {
   const auth = getAuth();
@@ -48,7 +50,6 @@ const ProfilePage = () => {
   });
 
   const coordinates = filteredList.map(item => {
-    console.log(item);
     return {
       id: item.id,
       title: item.title,
@@ -67,7 +68,6 @@ const ProfilePage = () => {
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
   };
 
-  console.log(imgFile);
   // input 변경
   const changeNickName = e => {
     setNickname(e.target.value);
@@ -93,7 +93,16 @@ const ProfilePage = () => {
       dispatch(updatePhoto(downloadURL));
       setPhotoEditShown(false);
     } catch (error) {
-      console.log(error.message);
+      toast.error('수정에 실패했습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 
@@ -180,12 +189,12 @@ const ProfilePage = () => {
             )}
           </div>
         </ScProfileWrapper>
+        <EditBtn />
       </section>
       <hr />
       <section>
         <h2>내 Fix보기</h2>
       </section>
-      {/* <ListInMypage /> */}
       <MapComponent coordinates={coordinates} />
     </ScMyPageWrapper>
   );

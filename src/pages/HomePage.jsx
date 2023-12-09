@@ -1,46 +1,20 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled, {css} from 'styled-components';
 import AddNew from '../components/AddNew';
 import {useNavigate} from 'react-router';
-import {db} from '../shared/firebase';
-import {collection, getDocs} from '@firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
-import {setList} from '../redux/modules/fixList';
-
+import {useReadFirestore} from '../components/UI/CustomHook';
 export default function Homepage() {
   const navigate = useNavigate();
-  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
-  // console.log('이게 이즈로긴', isLogin);
-  // const [docs, setDocs] = useState([]);
-  // const addlist = useSelector(state => state.list);
-  const list = useSelector(state => state.fixList);
   const dispatch = useDispatch();
-  // console.log('이게 리스트', addlist);
-
-  useEffect(() => {
-    const dataReading = async () => {
-      const querySnapshot = await getDocs(collection(db, 'fixs'));
-      let dataArr = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-
-        // console.log(data, ' 이게 독 아이디');
-        dataArr.push({...data, id: doc.id});
-
-        // console.log(data.createdAt, '이게그거');
-        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-      });
-
-      dispatch(setList(dataArr));
-    };
-    // console.log('리랜더링 되니?');
-    dataReading();
-  }, []);
+  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
+  useReadFirestore();
+  const list = useSelector(state => state.fixList);
 
   return (
     <Body>
       <Fixbar>
-        <span>최근Fix한곳</span>
+        <span>최근 Fix 한 곳</span>
         {isLogin ? <AddNew /> : <></>}
       </Fixbar>
       <ListWrapper>
@@ -77,6 +51,7 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 150px;
 `;
 
 const Fixbar = styled.div`
@@ -85,19 +60,30 @@ const Fixbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 50px;
+  padding: 0 150px;
   font-size: 30px;
+  & span {
+    font-weight: 600;
+  }
 `;
 
 const ListWrapper = styled.div`
-  display: flex;
-  /* grid-template-columns: repeat(auto-fill, minmax(25%, auto)); */
-
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 74%;
-  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
   gap: 10px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const PhotoWrapper = styled.div`
@@ -210,11 +196,3 @@ const Avatar = styled.figure`
     border-radius: 50%;
   }
 `;
-// :root {
-//   --deep-blue: #39a7ff;
-//   --blue: #87c4ff;
-//   --light-blue: #e0f4ff;
-//   --beige: #ffeed9;
-//   --black: #000;
-//   --white: #fff;
-// }
