@@ -3,12 +3,12 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {auth} from '../shared/firebase';
 import styled from 'styled-components';
 import React from 'react';
-import Map from '../components/Map';
 import {useEffect} from 'react';
 import {toast} from 'react-toastify';
 import {useDispatch} from 'react-redux';
-import {__deleteFix, __getFix} from '../redux/modules/Detail';
+import {__deleteFix, __getFix} from '../redux/modules/DetailSlice';
 import {useSelector} from 'react-redux';
+import DetailMap from '../components/DetailMap';
 
 function DetailPage() {
   // const [user, setUser] = useState;
@@ -49,32 +49,30 @@ function DetailPage() {
 
   return (
     <>
-      {fix && (
-        <ScContainer>
-          <ScMain>
-            <ScImg src={fix.image_url}></ScImg>
-            <ScTitleBox>
-              <ScH1>{fix.title} </ScH1>
-            </ScTitleBox>
-            <ScP>{fix.content}</ScP>
-            <Map />
-            <ScBtnBox>
-              {user ? (
-                user.email !== fix.email ? (
-                  <></>
-                ) : (
-                  <>
-                    <SubButton onClick={navegateAddEdetail}>수정</SubButton>
-                    <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
-                  </>
-                )
-              ) : (
+      <ScContainer>
+        <ScMain>
+          <ScImg src={fix.image_url}></ScImg>
+          <ScTitleBox>
+            <ScH1>{fix.title} </ScH1>
+          </ScTitleBox>
+          <ScP>{fix.content}</ScP>
+          <DetailMap />
+          <ScBtnBox>
+            {user ? (
+              user.email !== fix.email ? (
                 <></>
-              )}
-            </ScBtnBox>
-          </ScMain>
-        </ScContainer>
-      )}
+              ) : (
+                <>
+                  <SubButton onClick={navegateAddEdetail}>수정</SubButton>
+                  <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
+                </>
+              )
+            ) : (
+              <></>
+            )}
+          </ScBtnBox>
+        </ScMain>
+      </ScContainer>
     </>
   );
 }

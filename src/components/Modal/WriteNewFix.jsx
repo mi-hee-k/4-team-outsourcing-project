@@ -174,7 +174,7 @@ function WriteNewFix() {
             //3. 파이어스토어에 데이터 저장
             const collectionRef = collection(db, 'fixs');
             const res = await addDoc(collectionRef, newData);
-            console.log(res.id);
+
             //4. 모달닫기
             dispatch(addList({...newData, id: res.id}));
             dispatch(closeAddModal());
