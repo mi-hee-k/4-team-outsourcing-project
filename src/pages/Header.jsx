@@ -125,6 +125,6 @@ const Right = styled.div`
   gap: 10px;
 
   button:last-child {
-    width: 30%;
+    width: 20%;
   }
 `;
