@@ -36,7 +36,6 @@ function WriteNewFix() {
               //첫번째 결과의 값을 활용
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-              console.log('currentPos다', addrData);
               seLatitude(currentPos.Ma);
               setLongitude(currentPos.La);
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
@@ -52,8 +51,6 @@ function WriteNewFix() {
       alert('카카오map 로드가 안됨');
     }
   };
-
-  console.log(buildingName);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -154,7 +151,7 @@ function WriteNewFix() {
         //3. 파이어스토어에 데이터 저장
         const collectionRef = collection(db, 'fixs');
         const res = await addDoc(collectionRef, newData);
-        console.log(res.id);
+
         //4. 모달닫기
         dispatch(addList({...newData, id: res.id}));
         dispatch(closeAddModal());

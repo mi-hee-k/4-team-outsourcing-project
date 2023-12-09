@@ -9,20 +9,6 @@ function Modal() {
   const publicModal = useSelector(state => state.publicModal);
   const dispatch = useDispatch();
 
-  //외부화면 스크롤 방지
-  useEffect(() => {
-    if (publicModal.isUse) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [publicModal.isUse]);
-
-  //메인모달 외부영역 클릭시 > 공용모달 오픈
   const closeModalOutside = event => {
     if (event.target === event.currentTarget) {
       openPublicModal();
@@ -38,13 +24,29 @@ function Modal() {
         btnMsg: '계속 작성',
         btnType: 'continue',
         btnMsg2: '나가기',
-        btnType2: 'exit', // 함수 대신 타입 지정
+        btnType2: 'exit',
       }),
     );
   };
 
+  // 모달이 열릴 때 배경 스크롤을 막는 부분
+  useEffect(() => {
+    if (publicModal.isUse) {
+      //메인모달용
+      document.body.style.overflow = 'hidden';
+    } else {
+      //공용모달용
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      // 모달이 닫힐 때 배경 스크롤을 다시 허용하는 부분
+      document.body.style.overflow = 'unset';
+    };
+  }, [publicModal.isUse]);
+
   return (
-    <>
+    <div>
       {publicModal.isUse && <PublicModal />}
 
       <ScDiv
@@ -56,7 +58,7 @@ function Modal() {
           <WriteNewFix />
         </ScDivContainer>
       </ScDiv>
-    </>
+    </div>
   );
 }
 
