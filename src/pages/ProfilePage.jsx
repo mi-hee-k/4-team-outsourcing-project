@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Header from './Header';
 import styled from 'styled-components';
 import Button from '../components/UI/Button';
@@ -6,8 +6,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getAuth, updateProfile} from '@firebase/auth';
 import {updateNickname, updatePhoto} from '../redux/modules/Auth';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
-import {storage} from '../shared/firebase';
+import {db, storage} from '../shared/firebase';
 import ListInMypage from '../components/UI/ListInMypage';
+import MapComponent from '../components/MapComponent';
+import {collection, getDocs} from '@firebase/firestore';
+import {setList} from '../redux/modules/fixList';
 
 const ProfilePage = () => {
   const auth = getAuth();
@@ -20,6 +23,35 @@ const ProfilePage = () => {
   const [imgFile, setImgFile] = useState('');
   const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
+
+  // 여기서부터
+
+  const list = useSelector(state => state.fixList);
+
+  useEffect(() => {
+    const dataReading = async () => {
+      const querySnapshot = await getDocs(collection(db, 'fixs'));
+      let dataArr = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        dataArr.push({...data, id: doc.id});
+        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
+      });
+
+      dispatch(setList(dataArr));
+    };
+
+    dataReading();
+  }, []);
+  const filteredList = list.filter(item => {
+    return item.uid == auth.currentUser.uid;
+  });
+
+  const coordinates = filteredList.map(item => {
+    return {lat: item.latitude, lng: item.longitude};
+  });
+
+  // 여기까지
 
   // 이미지 저장
   const saveImgFile = e => {
@@ -146,7 +178,8 @@ const ProfilePage = () => {
         <h2>내 Fix보기</h2>
         <div>지도</div>
       </section>{' '}
-      <ListInMypage />
+      {/* <ListInMypage /> */}
+      <MapComponent coordinates={coordinates} />
     </ScMyPageWrapper>
   );
 };
