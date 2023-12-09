@@ -24,8 +24,10 @@ export default function Header() {
             navigate('/');
           }}
         >
-          <img src={PinImage} alt="" />
-          <h1>Let's Fix</h1>
+          <ScHomeBtn>
+            <img src={PinImage} alt="" />
+            <h1>Let's Fix</h1>
+          </ScHomeBtn>
         </Left>
 
         <Right>
@@ -74,39 +76,58 @@ export default function Header() {
 
 const Nav = styled.nav`
   height: 100px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--deep-blue);
   font-size: 40px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  padding: 0px 100px;
+  padding: 0px 20px;
 `;
 
 const Left = styled.div`
-  width: 15vw;
+  width: 50%;
   height: 100px;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   border-radius: 10px;
+  padding: 0 10px;
+`;
+
+const ScHomeBtn = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
   cursor: pointer;
-  & img {
-    height: 100%;
-    width: 100px;
+
+  @media only screen and (max-width: 980px) {
+    width: 70%;
   }
+
+  img {
+    width: 68px;
+    height: auto;
+    margin-right: 10px;
+  }
+
   &:hover {
     cursor: pointer;
-    transform: scale(1.02);
+    transform: scale(1.05);
     transition: all 0.2s;
-    background-color: var(--blue);
   }
 `;
 
 const Right = styled.div`
-  width: 15vw;
+  width: 50%;
   display: flex;
-  justify-content: space-around;
-  margin-right: 50px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+
+  button:last-child {
+    width: 30%;
+  }
 `;
