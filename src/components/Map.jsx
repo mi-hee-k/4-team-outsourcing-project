@@ -1,49 +1,56 @@
-import React from 'react';
-import styled from 'styled-components';
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
-import {useParams} from 'react-router-dom';
-import {__getFix} from '../redux/modules/Detail';
-import {useSelector} from 'react-redux';
+// import React from 'react';
+// import styled from 'styled-components';
+// import {useEffect} from 'react';
+// import {useDispatch} from 'react-redux';
+// import {useParams} from 'react-router-dom';
+// import {__getFix} from '../redux/modules/DetailSlice';
+// import {useSelector} from 'react-redux';
+// import {Map, MapMarker} from 'react-kakao-maps-sdk';
 
-const {kakao} = window;
+// const {kakao} = window;
 
-function Map() {
-  const dispatch = useDispatch();
-  const {id} = useParams();
-  const mapAdrres = useSelector(state => state.fix.fix);
-  console.log('받아온 정보', mapAdrres);
+// function Map() {
+//   const dispatch = useDispatch();
+//   const {id} = useParams();
+//   const mapAdrres = useSelector(state => state.fix.fix);
 
-  useEffect(() => {
-    dispatch(__getFix(id));
-  }, []);
+//   console.log('받아온 정보', mapAdrres);
 
-  useEffect(() => {
-    kakao.maps.load(() => {
-      const container = document.getElementById('map');
-      const option = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
-      const map = new kakao.maps.Map(container, option);
-    });
-  }, []);
+//   useEffect(() => {
+//     dispatch(__getFix(id));
+//   }, []);
 
-  const markerPosition = new kakao.maps.LatLng();
+//   useEffect(() => {
+//     kakao.maps.load(() => {
+//       const container = document.getElementById('map');
+//       const option = {
+//         center: new kakao.maps.LatLng(mapAdrres.latitude, mapAdrres.longitude),
+//         level: 3,
+//       };
+//       const map = new kakao.maps.Map(container, option);
+//     });
+//   }, []);
 
-  return (
-    <ScMap>
-      <div id="map" style={{width: '100%', height: '100%'}}></div>
-    </ScMap>
-  );
-}
-const ScMap = styled.div`
-  margin: 50px auto 0px auto;
-  width: 70%;
-  height: 230px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--light-blue);
-`;
-export default Map;
+//   const markerPosition = new kakao.maps.LatLng(mapAdrres.latitude, mapAdrres.longitude);
+
+//   return (
+//     <ScMap>
+//       <Map center={{lat: 33.5563, lng: 126.79581}} style={{width: '100%', height: '360px'}}>
+//         <MapMarker position={{lat: 33.55635, lng: 126.795841}}>
+//           <div style={{color: '#000'}}>Hello World!</div>
+//         </MapMarker>
+//       </Map>
+//     </ScMap>
+//   );
+// }
+// const ScMap = styled.div`
+//   margin: 50px auto 0px auto;
+//   width: 70%;
+//   height: 230px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: var(--light-blue);
+// `;
+// export default Map;
+// å

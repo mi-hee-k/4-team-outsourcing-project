@@ -36,12 +36,12 @@ function WriteNewFix() {
               //첫번째 결과의 값을 활용
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-
+              console.log('currentPos다', addrData);
               seLatitude(currentPos.Ma);
               setLongitude(currentPos.La);
-
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
               // 선택한 주소로 입력 필드 업데이트
+
               setAddrInput(addrData.address);
               setBuildingName(addrData.buildingName);
             }
@@ -148,6 +148,7 @@ function WriteNewFix() {
           addrInput,
           latitude,
           longitude,
+          buildingName,
         };
 
         //3. 파이어스토어에 데이터 저장
