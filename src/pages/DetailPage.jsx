@@ -16,7 +16,7 @@ function DetailPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLoading, isError, fix} = useSelector(state => state.fix);
-  const navegateAddEdetail = () => {
+  const navigateEditdetail = () => {
     navigate(`/editdetail/${id}`);
   };
   console.log(fix);
@@ -43,6 +43,7 @@ function DetailPage() {
   }
 
   if (isError) {
+    console.log('에러메세지다', isError);
     toast.success('오류가 발생했습니다. 다시 시도해주세요');
     navigate('/');
   }
@@ -51,10 +52,10 @@ function DetailPage() {
     <>
       <ScContainer>
         <ScMain>
-          <ScImg src={fix.image_url}></ScImg>
           <ScTitleBox>
             <ScH1>{fix.title} </ScH1>
           </ScTitleBox>
+          <ScImg src={fix.image_url}></ScImg>
           <ScP>{fix.content}</ScP>
           <DetailMap />
           <ScBtnBox>
@@ -63,7 +64,7 @@ function DetailPage() {
                 <></>
               ) : (
                 <>
-                  <SubButton onClick={navegateAddEdetail}>수정</SubButton>
+                  <SubButton onClick={navigateEditdetail}>수정</SubButton>
                   <CancelButton onClick={() => deletePost()}>삭제</CancelButton>
                 </>
               )
@@ -81,38 +82,49 @@ const ScContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 200vh;
+  height: 150vh;
 `;
 
 const ScMain = styled.div`
   width: 60%;
-  height: 170vh;
+  height: 150vh;
   border: 2px solid #f6f6f6;
+  border-radius: 5px;
 `;
 
 const ScImg = styled.img`
-  height: 450px;
+  height: 30%;
   width: 100%;
 `;
 
-const ScH1 = styled.p`
+const ScH1 = styled.h1`
   margin-left: 30px;
-  font-size: 30px;
+  font-size: 2rem;
   background: none;
+  @media only screen and (min-width: 1500px) {
+    font-size: 300%;
+  }
 `;
 
 const ScTitleBox = styled.div`
   height: 70px;
-  border-bottom: 1px lightgray solid;
+  border-bottom: 2px solid var(--light-blue);
   display: flex;
   align-items: center;
+  justify-content: center;
+  @media only screen and (min-width: 1500px) {
+    height: 80px;
+  }
 `;
 
 const ScP = styled.p`
   display: flex;
   align-items: center;
   margin: 50px 40px 0px 40px;
-  font-size: 15px;
+  font-size: 18px;
+  @media only screen and (min-width: 1500px) {
+    font-size: 150%;
+  }
 `;
 
 const ScBtnBox = styled.div`

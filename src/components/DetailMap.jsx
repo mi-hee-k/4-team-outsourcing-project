@@ -1,17 +1,15 @@
 import React from 'react';
-import {CustomOverlayMap, Map, MapMarker} from 'react-kakao-maps-sdk';
-
+import {CustomOverlayMap, Map, MapMarker, useKakaoLoader} from 'react-kakao-maps-sdk';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components';
-import useKakaoLoader from './useKaKaoLoader';
 
 function DetailMap() {
   useKakaoLoader();
   const fixArr = useSelector(state => state.fix.fix);
   console.log('fix', fixArr);
   return (
-    <>
-      <Map center={{lat: fixArr.latitude, lng: fixArr.longitude}} style={{width: '800px', height: '600px'}} level={3}>
+    <ScMap>
+      <Map center={{lat: fixArr.latitude, lng: fixArr.longitude}} style={{width: '100%', height: '100%'}} level={3}>
         <ScMapMarker position={{lat: fixArr.latitude, lng: fixArr.longitude}}></ScMapMarker>
         <CustomOverlayMap position={{lat: fixArr.latitude, lng: fixArr.longitude}} yAnchor={2}>
           <div className="customoverlay">
@@ -30,12 +28,18 @@ function DetailMap() {
             </a>
           </div>
         </CustomOverlayMap>
-        {/* 마커 좌표 */}
       </Map>
-    </>
+    </ScMap>
   );
 }
-
+const ScMap = styled.div`
+  margin: 100px auto 0px auto;
+  width: 70%;
+  height: 24%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const ScMapMarker = styled(MapMarker)`
   width: max-content;
   height: max-content;

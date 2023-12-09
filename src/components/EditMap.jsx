@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import {Map, MapMarker} from 'react-kakao-maps-sdk';
 import {useState} from 'react';
-
+import {useKakaoLoader} from 'react-kakao-maps-sdk';
 const {kakao} = window;
 
 function EditMap() {
+  useKakaoLoader();
   const [info, setInfo] = useState();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState();
-  const [search, setSearch] = useState();
   const [searchBtn, setSearchBtn] = useState();
 
   useEffect(() => {
