@@ -25,7 +25,7 @@ export default function Header() {
           }}
         >
           <img src={PinImage} alt="" />
-          <h1>Let`s Fix</h1>
+          <h1>Let's Fix</h1>
         </Left>
 
         <Right>
@@ -81,14 +81,16 @@ const Nav = styled.nav`
   background-color: var(--deep-blue);
   font-size: 40px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 0px 100px;
 `;
 
 const Left = styled.div`
-  width: 30vw;
+  width: 15vw;
   height: 100px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
+  border-radius: 10px;
   cursor: pointer;
   & img {
     height: 100%;
@@ -98,12 +100,13 @@ const Left = styled.div`
     cursor: pointer;
     transform: scale(1.02);
     transition: all 0.2s;
+    background-color: var(--blue);
   }
 `;
 
 const Right = styled.div`
-  width: 30vw;
+  width: 15vw;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-around;
   margin-right: 50px;
 `;
