@@ -90,6 +90,10 @@ const ScButtonFirst = styled.button`
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  &:hover {
+    border: 1px solid var(--deep-blue);
+    box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
+  }
 `;
 const ScButtonSecond = styled.button`
   width: calc(50% - 5px);
@@ -101,6 +105,10 @@ const ScButtonSecond = styled.button`
   font-weight: 500;
   border: none;
   cursor: pointer;
+  &:hover {
+    border: 1px solid var(--deep-blue);
+    box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
+  }
 `;
 
 export default PublicModal;
