@@ -54,7 +54,7 @@ function Modal() {
         }}
       >
         <ScDivContainer>
-          <WriteNewFixTest />
+          <WriteNewFix />
         </ScDivContainer>
       </ScDiv>
     </>
