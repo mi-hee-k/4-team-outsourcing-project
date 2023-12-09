@@ -80,6 +80,7 @@ const Nav = styled.nav`
   align-items: center;
   background-color: var(--deep-blue);
   font-size: 40px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 `;
 
 const Left = styled.div`

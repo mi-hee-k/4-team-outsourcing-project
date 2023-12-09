@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-
 import styled, {css} from 'styled-components';
 import AddNew from '../components/AddNew';
 import {useNavigate} from 'react-router';
@@ -7,8 +6,6 @@ import {db} from '../shared/firebase';
 import {collection, getDocs} from '@firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import {setList} from '../redux/modules/fixList';
-import {auth} from '../shared/firebase';
-const {kakao} = window;
 
 export default function Homepage() {
   const navigate = useNavigate();
@@ -27,7 +24,7 @@ export default function Homepage() {
       querySnapshot.forEach(doc => {
         const data = doc.data();
 
-        console.log(data, ' 이게 독 아이디');
+        // console.log(data, ' 이게 독 아이디');
         dataArr.push({...data, id: doc.id});
 
         // console.log(data.createdAt, '이게그거');
@@ -65,11 +62,9 @@ export default function Homepage() {
                 </NicknameAndDate>
               </UserInfo>
               <Content>
-                <span>제목:</span>
-                {item.title}
-                <br /> <span>내용:</span>
-                {item.content}
-                {/* {item.createdAt.seconds} */}
+                <h1>{item.title}</h1>
+                <h3>{item.addrInput}</h3>
+                <h2>{item.content}</h2>
               </Content>
             </List>
           );
@@ -95,11 +90,12 @@ const Fixbar = styled.div`
 `;
 
 const ListWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25%, auto));
-  justify-content: center;
+  display: flex;
+  /* grid-template-columns: repeat(auto-fill, minmax(25%, auto)); */
+
+  justify-content: flex-start;
   flex-wrap: wrap;
-  width: 100%;
+  width: 74%;
   height: 100%;
   gap: 10px;
 `;
@@ -124,8 +120,8 @@ const List = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 25vw;
-  height: 300px;
+  width: 300px;
+  height: 400px;
   border-radius: 10px;
   margin: 0 10px;
   background-color: var(--light-blue);
@@ -143,22 +139,49 @@ const UserInfo = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+  margin: 10px auto;
 `;
 
 const NicknameAndDate = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 3px;
   gap: 6px;
+  & p {
+    font-size: 20px;
+  }
+  & time {
+    font-size: 12px;
+    color: gray;
+  }
 `;
 
-const Content = styled.p`
+const Content = styled.div`
   background-color: var(--beige);
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
-  padding: 12px;
+  padding: 10px;
   height: 30%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  gap: 5px;
+  & h1 {
+    font-size: 20px;
+    border-bottom: 1px solid gray;
+    padding-bottom: 5px;
+  }
+  & h2 {
+    font-size: 15px;
+
+    padding-bottom: 5px;
+    height: 40%;
+  }
+  & h3 {
+    font-size: 10px;
+    color: gray;
+  }
 `;
 
 const Avatar = styled.figure`
@@ -172,8 +195,8 @@ const Avatar = styled.figure`
         `;
       default:
         return css`
-          width: 50px;
-          height: 50px;
+          width: 55px;
+          height: 55px;
         `;
     }
   }}

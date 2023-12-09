@@ -9,8 +9,8 @@ import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
-import {addlist} from '../../redux/modules/fixList';
-
+import {addList} from '../../redux/modules/fixList';
+import bonobono from '../../asset/bonobono.jpg';
 function WriteNewFix() {
   //지도
   const [map, setMap] = useState(null);
@@ -161,7 +161,7 @@ function WriteNewFix() {
               content,
               date: formattedDate,
               createdAt: new Date(),
-              image_url: uploadImageUrl,
+              image_url: uploadImageUrl ? uploadImageUrl : bonobono,
               uid,
               displayName,
               email,
@@ -173,12 +173,12 @@ function WriteNewFix() {
 
             //3. 파이어스토어에 데이터 저장
             const collectionRef = collection(db, 'fixs');
-            await addDoc(collectionRef, newData);
-
+            const res = await addDoc(collectionRef, newData);
+            console.log(res.id);
             //4. 모달닫기
+            dispatch(addList({...newData, id: res.id}));
             dispatch(closeAddModal());
             toast.success('저장되었습니다.');
-            dispatch(addlist(newData));
           } catch (Error) {
             console.log('[form Error] (WriteNewFix.jsx): ', Error);
           }
