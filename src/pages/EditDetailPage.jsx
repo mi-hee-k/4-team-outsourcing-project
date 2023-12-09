@@ -11,6 +11,7 @@ import {ref} from 'firebase/storage';
 import {getDownloadURL, uploadBytes} from 'firebase/storage';
 import {toast} from 'react-toastify';
 import {useDispatch} from 'react-redux';
+import EditMap from '../components/EditMap';
 
 function EditDetailPage() {
   const [title, setTitle] = useState('');
@@ -88,7 +89,7 @@ function EditDetailPage() {
             <ScTitleInput autoFocus value={title} onChange={titleOnchangeHandler} />
           </ScTitleBox>
           <ScContentTextarea value={content} onChange={contentOnchangeHandler} />
-          {/* <Map>지도</Map> */}
+          <EditMap />
           <ScBtnBox>
             <SubButton type="submit">수정완료</SubButton>
           </ScBtnBox>
