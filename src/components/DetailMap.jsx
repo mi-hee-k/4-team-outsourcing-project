@@ -6,8 +6,8 @@ function DetailMap() {
   const fixArr = useSelector(state => state.fix.fix);
   console.log('fix', fixArr);
   return (
-    <Map center={{lat: 37.5291904009702, lng: 127.123806229957}} style={{width: '800px', height: '600px'}} level={3}>
-      <MapMarker position={{lat: 37.5291904009702, lng: 127.123806229957}}> </MapMarker> // 마커 좌표
+    <Map center={{lat: fixArr.latitude, lng: fixArr.longitude}} style={{width: '800px', height: '600px'}} level={3}>
+      <MapMarker position={{lat: fixArr.latitude, lng: fixArr.longitude}}> </MapMarker> // 마커 좌표
     </Map>
   );
 }
