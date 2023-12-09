@@ -11,6 +11,7 @@ import {db, storage} from '../shared/firebase';
 import MapComponent from '../components/MapComponent';
 import {collection, getDocs} from '@firebase/firestore';
 import {setList} from '../redux/modules/fixList';
+import EditBtn from '../components/UI/CustomHook';
 
 const ProfilePage = () => {
   const auth = getAuth();
@@ -180,6 +181,7 @@ const ProfilePage = () => {
             )}
           </div>
         </ScProfileWrapper>
+        <EditBtn />
       </section>
       <hr />
       <section>

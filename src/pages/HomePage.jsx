@@ -14,30 +14,26 @@ export default function Homepage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
-  const list = useSelector(state => state.fixList);
   useReadFirestore();
-  const filteredList = list.filter(item => {
-    return item.uid == auth.currentUser.uid;
-  });
-  const dataReading = async () => {
-    const querySnapshot = await getDocs(collection(db, 'fixs'));
-    let dataArr = [];
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
+  const list = useSelector(state => state.fixList);
+  // const dataReading = async () => {
+  //   const querySnapshot = await getDocs(collection(db, 'fixs'));
+  //   let dataArr = [];
+  //   querySnapshot.forEach(doc => {
+  //     const data = doc.data();
 
-      // console.log(data, ' 이게 독 아이디');
-      dataArr.push({...data, id: doc.id});
+  //     // console.log(data, ' 이게 독 아이디');
+  //     dataArr.push({...data, id: doc.id});
 
-      // console.log(data.createdAt, '이게그거');
-      dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-    });
+  //     // console.log(data.createdAt, '이게그거');
+  //     dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
+  //   });
 
-    dispatch(setList(dataArr));
-  };
+  //   dispatch(setList(dataArr));
+  // };
 
   return (
     <Body>
-      <button onClick={() => Update(photoURL, displayName, filteredList, dispatch, dataReading)}>테스트 버튼</button>
       <Fixbar>
         <span>최근 Fix 한 곳</span>
         {isLogin ? <AddNew /> : <></>}
