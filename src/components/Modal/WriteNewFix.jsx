@@ -36,12 +36,12 @@ function WriteNewFix() {
               //첫번째 결과의 값을 활용
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-
+              console.log('currentPos다', addrData);
               seLatitude(currentPos.Ma);
               setLongitude(currentPos.La);
-
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
               // 선택한 주소로 입력 필드 업데이트
+
               setAddrInput(addrData.address);
               setBuildingName(addrData.buildingName);
             }
@@ -148,6 +148,7 @@ function WriteNewFix() {
           addrInput,
           latitude,
           longitude,
+          buildingName,
         };
 
         //3. 파이어스토어에 데이터 저장
@@ -176,6 +177,7 @@ function WriteNewFix() {
               onChange={onChangeHandler}
               placeholder=" 제목을 입력해주세요."
               maxLength={30}
+              required
             ></ScInputTitle>
           </div>
           <div>
@@ -184,6 +186,7 @@ function WriteNewFix() {
               placeholder=" 내용을 입력해주세요"
               value={content}
               onChange={onChangeHandler}
+              required
             ></ScTextareaContent>
           </div>
           {!previewFile && (
@@ -204,15 +207,18 @@ function WriteNewFix() {
           )}
 
           {/* 맵 바꾸기 */}
-          <div onClick={searchAddress}>
-            <input
-              id="addr"
-              placeholder=" 📍 장소 검색"
-              value={addrInput}
-              onChange={event => setAddrInput(event.target.value)}
-            />
-            <button type="button">장소 검색</button>
-          </div>
+          <ScDivMapSearch>
+            <div required onClick={searchAddress}>
+              <input
+                required
+                id="addr"
+                placeholder=" 📍 장소 검색"
+                value={addrInput}
+                onChange={event => setAddrInput(event.target.value)}
+              />
+              <button type="button">장소 검색</button>
+            </div>
+          </ScDivMapSearch>
           <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '360px'}}>
             <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
           </Map>
