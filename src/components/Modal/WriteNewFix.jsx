@@ -52,8 +52,8 @@ function WriteNewFix() {
               // 해당 주소에 대한 좌표를 받아서
               const currentPos = new window.kakao.maps.LatLng(result[0].y, result[0].x);
 
-              seLatitude(currentPos.La);
-              setLongitude(currentPos.Ma);
+              seLatitude(currentPos.Ma);
+              setLongitude(currentPos.La);
 
               // 최종 주소 변수-> 주소 정보를 해당 필드에 넣는다.
               // 선택한 주소로 입력 필드 업데이트
@@ -145,48 +145,49 @@ function WriteNewFix() {
     navigate('/');
   };
 
+  const formOnSubmit = async event => {
+    {
+      event.preventDefault();
+
+      try {
+        //1. 이미지 파일 업로드
+        const uploadImageUrl = await handleUpload();
+
+        //2. 모달창에 입력된 새로운 데이터
+        const newData = {
+          title,
+          content,
+          date: formattedDate,
+          createdAt: new Date(),
+          image_url: uploadImageUrl ? uploadImageUrl : bonobono,
+          uid,
+          displayName,
+          email,
+          photoURL: photoURL ? photoURL : pinImg,
+          addrInput,
+          latitude,
+          longitude,
+        };
+
+        //3. 파이어스토어에 데이터 저장
+        const collectionRef = collection(db, 'fixs');
+        const res = await addDoc(collectionRef, newData);
+        console.log(res.id);
+        //4. 모달닫기
+        dispatch(addList({...newData, id: res.id}));
+        dispatch(closeAddModal());
+        toast.success('저장되었습니다.');
+      } catch (Error) {
+        console.log('[form Error] (WriteNewFix.jsx): ', Error);
+      }
+    }
+  };
+
   return (
     <>
-      <form
-        onSubmit={async event => {
-          event.preventDefault();
-
-          try {
-            //1. 이미지 파일 업로드
-            const uploadImageUrl = await handleUpload();
-
-            //2. 모달창에 입력된 새로운 데이터
-            const newData = {
-              title,
-              content,
-              date: formattedDate,
-              createdAt: new Date(),
-              image_url: uploadImageUrl ? uploadImageUrl : bonobono,
-              uid,
-              displayName,
-              email,
-              photoURL: photoURL ? photoURL : pinImg,
-              addrInput,
-              latitude,
-              longitude,
-            };
-
-            //3. 파이어스토어에 데이터 저장
-            const collectionRef = collection(db, 'fixs');
-            const res = await addDoc(collectionRef, newData);
-            console.log(res.id);
-            //4. 모달닫기
-            dispatch(addList({...newData, id: res.id}));
-            dispatch(closeAddModal());
-            toast.success('저장되었습니다.');
-          } catch (Error) {
-            console.log('[form Error] (WriteNewFix.jsx): ', Error);
-          }
-        }}
-      >
+      <form onSubmit={formOnSubmit}>
         <ScDiv>
           <h1>어디로 '픽스' 할까요?</h1>
-
           <div>
             <ScInputTitle
               name="title"
@@ -397,7 +398,8 @@ const ScInputTitle = styled.input`
   border: 1px solid var(--deep-blue);
   border-radius: 8px;
   //background-color: var(--light-blue);
-  padding: 20px auto;
+  //padding: 20px auto;
+  padding-left: 10px;
   &::placeholder {
     color: #bbb;
   }
@@ -421,6 +423,7 @@ const ScTextareaContent = styled.textarea`
   //background-color: var(--light-blue);
   border: 1px solid var(--deep-blue);
   border-radius: 8px;
+  padding-left: 13px;
   &::placeholder {
     color: #bbb;
   }
