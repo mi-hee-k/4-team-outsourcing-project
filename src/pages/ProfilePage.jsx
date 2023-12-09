@@ -195,7 +195,6 @@ const ProfilePage = () => {
       <section>
         <h2>내 Fix보기</h2>
       </section>
-      {/* <ListInMypage /> */}
       <MapComponent coordinates={coordinates} />
     </ScMyPageWrapper>
   );
