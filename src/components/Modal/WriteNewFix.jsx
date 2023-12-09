@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {auth, db, storage} from '../../shared/firebase';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
@@ -124,41 +124,39 @@ function WriteNewFix() {
   };
 
   const formOnSubmit = async event => {
-    {
-      event.preventDefault();
+    event.preventDefault();
 
-      try {
-        //1. 이미지 파일 업로드
-        const uploadImageUrl = await handleUpload();
+    try {
+      //1. 이미지 파일 업로드
+      const uploadImageUrl = await handleUpload();
 
-        //2. 모달창에 입력된 새로운 데이터
-        const newData = {
-          title,
-          content,
-          date: formattedDate,
-          createdAt: new Date(),
-          image_url: uploadImageUrl ? uploadImageUrl : bonobono,
-          uid,
-          displayName,
-          email,
-          photoURL: photoURL ? photoURL : pinImg,
-          addrInput,
-          latitude,
-          longitude,
-          buildingName,
-        };
+      //2. 모달창에 입력된 새로운 데이터
+      const newData = {
+        title,
+        content,
+        date: formattedDate,
+        createdAt: new Date(),
+        image_url: uploadImageUrl ? uploadImageUrl : bonobono,
+        uid,
+        displayName,
+        email,
+        photoURL: photoURL ? photoURL : pinImg,
+        addrInput,
+        latitude,
+        longitude,
+        buildingName,
+      };
 
-        //3. 파이어스토어에 데이터 저장
-        const collectionRef = collection(db, 'fixs');
-        const res = await addDoc(collectionRef, newData);
+      //3. 파이어스토어에 데이터 저장
+      const collectionRef = collection(db, 'fixs');
+      const res = await addDoc(collectionRef, newData);
 
-        //4. 모달닫기
-        dispatch(addList({...newData, id: res.id}));
-        dispatch(closeAddModal());
-        toast.success('저장되었습니다.');
-      } catch (Error) {
-        console.log('[form Error] (WriteNewFix.jsx): ', Error);
-      }
+      //4. 모달닫기
+      dispatch(addList({...newData, id: res.id}));
+      dispatch(closeAddModal());
+      toast.success('저장되었습니다.');
+    } catch (Error) {
+      console.log('[form Error] (WriteNewFix.jsx): ', Error);
     }
   };
 
@@ -233,10 +231,6 @@ function WriteNewFix() {
   );
 }
 
-const ScBody = styled.body`
-  background-color: var(--light-blue);
-`;
-
 const ScDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -268,12 +262,6 @@ const ScDiv = styled.div`
   }
 `;
 
-const ScImageLogo = styled.image`
-  z-index: 999;
-  width: 100px;
-  height: 100px;
-`;
-
 const ScDivMapSearch = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -300,11 +288,6 @@ const ScDivMapSearch = styled.div`
       box-shadow: rgba(57, 167, 255, 0.4) 0px 0px 0px 3px;
     }
   }
-`;
-
-const ScDivMapShow = styled.div`
-  width: 100%;
-  height: 250px;
 `;
 
 const ScDivFileUpload = styled.div`
