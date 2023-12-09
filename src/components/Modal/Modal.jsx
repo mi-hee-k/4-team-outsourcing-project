@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import WriteNewFix from './WriteNewFix';
-import WriteNewFixTest from './WriteNewFix_test';
 import {useDispatch, useSelector} from 'react-redux';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import PublicModal from './PublicModal';
