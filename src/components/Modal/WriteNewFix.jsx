@@ -11,30 +11,15 @@ import pinImg from '../../asset/pin.png';
 import {showPublicModal} from '../../redux/modules/publicModalSlice';
 import {addList} from '../../redux/modules/fixList';
 import bonobono from '../../asset/bonobono.jpg';
+import {Map, MapMarker} from 'react-kakao-maps-sdk';
+import useKakaoLoader from '../useKaKaoLoader';
+
 function WriteNewFix() {
+  useKakaoLoader();
   //지도
-  const [map, setMap] = useState(null);
-  const [marker, setMarker] = useState(null);
-  const [latitude, seLatitude] = useState(''); //위도
-  const [longitude, setLongitude] = useState(''); //경도
-  const [buildingName, setBuildingName] = useState(''); // 이름
-  // 1) 카카오맵 불러오기
-  useEffect(() => {
-    window.kakao.maps.load(() => {
-      const container = document.getElementById('map');
-      const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 초기 중심 좌표
-        level: 3, // 초기 줌 레벨
-      };
-
-      const map = new window.kakao.maps.Map(container, options);
-      const marker = new window.kakao.maps.Marker();
-
-      // 맵과 마커를 상태에 저장
-      setMap(map);
-      setMarker(marker);
-    });
-  }, []);
+  const [latitude, seLatitude] = useState(33.450701); //위도
+  const [longitude, setLongitude] = useState(126.570667); //경도
+  const [buildingName, setBuildingName] = useState(''); //경도
 
   const searchAddress = () => {
     // Kakao Maps에서 제공하는 주소 검색 대화상자 열기
@@ -58,13 +43,7 @@ function WriteNewFix() {
               // 선택한 주소로 입력 필드 업데이트
 
               setAddrInput(addrData.address);
-
-              // 맵을 선택한 위치로 이동하고 마커 표시
-              map.panTo(currentPos);
-              marker.setMap(null);
-              // 마커를 결과값으로 받은 위치로 옮긴다.
-              marker.setPosition(currentPos);
-              marker.setMap(map);
+              setBuildingName(addrData.buildingName);
             }
           });
         },
@@ -73,6 +52,8 @@ function WriteNewFix() {
       alert('카카오map 로드가 안됨');
     }
   };
+
+  console.log(buildingName);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -223,19 +204,19 @@ function WriteNewFix() {
             </>
           )}
 
-          <ScDivMapSearch>
-            <div onClick={searchAddress}>
-              <input
-                id="addr"
-                placeholder=" 📍 장소 검색"
-                value={addrInput}
-                onChange={event => setAddrInput(event.target.value)}
-              />
-              <button type="button">장소 검색</button>
-            </div>
-
-            <div id="map" style={{width: '100%', height: '250px'}}></div>
-          </ScDivMapSearch>
+          {/* 맵 바꾸기 */}
+          <div onClick={searchAddress}>
+            <input
+              id="addr"
+              placeholder=" 📍 장소 검색"
+              value={addrInput}
+              onChange={event => setAddrInput(event.target.value)}
+            />
+            <button type="button">장소 검색</button>
+          </div>
+          <Map center={{lat: latitude, lng: longitude}} style={{width: '100%', height: '360px'}}>
+            <MapMarker key={`${latitude}-${longitude}`} position={{lat: latitude, lng: longitude}}></MapMarker>
+          </Map>
 
           <ScDivButton>
             <ScButtonFix type="submit">Fix하기</ScButtonFix>
