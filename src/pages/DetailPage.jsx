@@ -17,7 +17,7 @@ function DetailPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLoading, isError, fix} = useSelector(state => state.fix);
-  // const newData = fix.fix.newData;
+
   const navigateEditdetail = () => {
     navigate(`/editdetail/${id}`);
   };
@@ -31,7 +31,7 @@ function DetailPage() {
   const deletePost = async post => {
     const deleteCheck = window.confirm('삭제하시겠습니까?');
     if (deleteCheck) {
-      dispatch(__deleteFix(id));
+      await dispatch(__deleteFix(id));
       toast.success('삭제되었습니다');
       navigate('/');
     } else {
