@@ -38,9 +38,13 @@ function DetailPage() {
       return;
     }
   };
-  //
+
   if (isLoading) {
-    return <ScLoding color="#3693d6" />;
+    return (
+      <ScLoding>
+        <FadeLoader color="#3693d6" />
+      </ScLoding>
+    );
   }
 
   if (isError) {
@@ -137,6 +141,12 @@ const ScBtnBox = styled.div`
   gap: 10px;
 `;
 
-const ScLoding = styled(FadeLoader)``;
+const ScLoding = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default DetailPage;
