@@ -20,7 +20,7 @@ function DetailPage() {
   const navigateEditdetail = () => {
     navigate(`/editdetail/${id}`);
   };
-  console.log('이미지 유알엘', fix.image_url);
+
   useEffect(() => {
     dispatch(__getFix(id));
   }, []);

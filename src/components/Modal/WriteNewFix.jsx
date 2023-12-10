@@ -96,7 +96,6 @@ function WriteNewFix() {
       await uploadBytes(imageRef, selectedFile);
       return await getDownloadURL(imageRef);
     } catch (error) {
-      console.log('WriteNewFix.jsx (handleUpload): ', error);
       throw error;
     }
   };
@@ -155,9 +154,7 @@ function WriteNewFix() {
       dispatch(addList({...newData, id: res.id}));
       dispatch(closeAddModal());
       toast.success('저장되었습니다.');
-    } catch (Error) {
-      console.log('[form Error] (WriteNewFix.jsx): ', Error);
-    }
+    } catch (Error) {}
   };
 
   return (

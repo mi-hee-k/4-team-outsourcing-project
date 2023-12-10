@@ -134,9 +134,7 @@ const ProfilePage = () => {
       setNickname('');
       // redux에 업데이트
       dispatch(updateNickname(nickname));
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (

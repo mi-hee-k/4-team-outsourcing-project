@@ -1,6 +1,7 @@
 import React from 'react';
 import {CustomOverlayMap, Map, MapMarker, useKakaoLoader} from 'react-kakao-maps-sdk';
 import {useSelector} from 'react-redux';
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 function DetailMap() {
@@ -27,8 +28,8 @@ function DetailMap() {
         ></ScMapMarker>
         <CustomOverlayMap position={{lat: fixArr.latitude, lng: fixArr.longitude}} yAnchor={2.1}>
           <div className="customoverlay">
-            <a
-              href={`https://map.kakao.com/link/map/${fixArr.buildingName},${fixArr.latitude},${fixArr.longitude}`}
+            <Link
+              to={`https://map.kakao.com/link/map/${fixArr.buildingName},${fixArr.latitude},${fixArr.longitude}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -39,7 +40,7 @@ function DetailMap() {
                 </div>
                 <ScAllowDiv>go</ScAllowDiv>
               </ScName>
-            </a>
+            </Link>
           </div>
         </CustomOverlayMap>
       </Map>

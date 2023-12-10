@@ -16,7 +16,6 @@ export const __getFix = createAsyncThunk('getFix', async (payload, thunkAPI) => 
     const post = await getDoc(postRef);
     return thunkAPI.fulfillWithValue(post.data());
   } catch (err) {
-    console.log('데이터 가져오기 오류다', err);
     return thunkAPI.rejectWithValue(err);
   }
 });

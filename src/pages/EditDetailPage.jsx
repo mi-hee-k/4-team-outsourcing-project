@@ -89,28 +89,44 @@ function EditDetailPage() {
   // 수정함수
   const postUpdateHandler = async e => {
     e.preventDefault();
+    if (uploadImg.name !== undefined) {
+      try {
+        const imageRef = ref(storage, `test/${uploadImg.name}`);
+        await uploadBytes(imageRef, uploadImg);
 
-    try {
-      const imageRef = ref(storage, `test/${uploadImg.name}`);
-      await uploadBytes(imageRef, uploadImg);
+        console.log('이미지다 ', uploadImg);
+        const downloadUrl = await getDownloadURL(imageRef);
+        // const imgUlr = {image_url: downloadUrl};
+        // 사진 수정 안되어도 값 안날라가게 고치기 필요
+        const newPost = {
+          title,
+          content,
+          image_url: downloadUrl,
+          buildingName,
+          latitude,
+          longitude,
+        };
 
-      const downloadUrl = await getDownloadURL(imageRef);
-      // const imgUlr = {image_url: downloadUrl};
-      // 사진 수정 안되어도 값 안날라가게 고치기 필요
-      const newPost = {
-        title,
-        content,
-        image_url: downloadUrl,
-        buildingName,
-        latitude,
-        longitude,
-      };
+        const postRef = doc(db, 'fixs', id);
+        await updateDoc(postRef, newPost);
+        toast.success('저장되었습니다.');
+        navigate(`/detail/${id}`);
+        return;
+      } catch (err) {}
+    }
+    const newPost = {
+      title,
+      content,
+      image_url: uploadImg,
+      buildingName,
+      latitude,
+      longitude,
+    };
 
-      const postRef = doc(db, 'fixs', id);
-      await updateDoc(postRef, newPost);
-      toast.success('저장되었습니다.');
-      navigate(`/detail/${id}`);
-    } catch (err) {}
+    const postRef = doc(db, 'fixs', id);
+    await updateDoc(postRef, newPost);
+    toast.success('저장되었습니다.');
+    navigate(`/detail/${id}`);
   };
 
   return (
@@ -196,6 +212,7 @@ const ScTitleInput = styled.input`
   background: none;
   outline: none;
   border-width: 0 0 0px;
+  padding: 25px;
 `;
 const ScTitleBox = styled.div`
   height: max-content;
