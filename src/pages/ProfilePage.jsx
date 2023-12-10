@@ -9,7 +9,6 @@ import {db, storage} from '../shared/firebase';
 import MapComponent from '../components/MapComponent';
 import {collection, getDocs, setDoc, doc} from '@firebase/firestore';
 import {setList} from '../redux/modules/fixList';
-import EditBtn from '../components/UI/CustomHook';
 import {toast} from 'react-toastify';
 
 const ProfilePage = () => {
@@ -24,7 +23,6 @@ const ProfilePage = () => {
   const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
 
-  // 내가 남긴 Fix 불러오기
   const list = useSelector(state => state.fixList);
 
   useEffect(() => {
@@ -32,9 +30,10 @@ const ProfilePage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    updateAllFixProfile();
+    updatePhotoAndNickname();
   }, [displayName, photoURL]);
 
+  // 데이터 읽어오기 (파이어베이스)
   const dataReading = async () => {
     const querySnapshot = await getDocs(collection(db, 'fixs'));
     let dataArr = [];
@@ -43,7 +42,6 @@ const ProfilePage = () => {
       dataArr.push({...data, id: doc.id});
       dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
     });
-
     dispatch(setList(dataArr));
   };
 
@@ -51,7 +49,8 @@ const ProfilePage = () => {
     return item.uid == auth.currentUser.uid;
   });
 
-  const updateAllFixProfile = () => {
+  // 프로필 변경 후 바로 적용
+  const updatePhotoAndNickname = () => {
     try {
       filteredList.map(async item => {
         await setDoc(doc(db, 'fixs', `${item.id}`), {

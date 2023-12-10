@@ -3,6 +3,7 @@ import {Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import useKakaoLoader from './useKaKaoLoader';
+import {Xmark} from 'iconoir-react';
 
 const MapComponent = ({coordinates}) => {
   useKakaoLoader();
@@ -87,7 +88,7 @@ const MapComponent = ({coordinates}) => {
                       })
                     }
                   >
-                    ❌
+                    <Xmark />
                   </span>
                 </ScInfoWindow>
               )}
@@ -137,6 +138,8 @@ const ScInfoWindow = styled.div`
     position: absolute;
     top: 10px;
     right: 10px;
+    color: #d10202;
+    font-size: 1.1rem;
     cursor: pointer;
   }
 `;
