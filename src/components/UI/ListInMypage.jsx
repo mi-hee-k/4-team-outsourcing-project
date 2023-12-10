@@ -16,7 +16,7 @@ export default function ListInMypage() {
     // console.log(item.uid, '유아이디들', auth.currentUser);
     return item.uid == auth.currentUser.uid;
   });
-  console.log(filteredList, '필털드');
+
   return (
     <>
       <ListWrapper>
