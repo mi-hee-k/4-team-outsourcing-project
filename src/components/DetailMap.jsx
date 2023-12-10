@@ -3,9 +3,11 @@ import {CustomOverlayMap, Map, MapMarker, useKakaoLoader} from 'react-kakao-maps
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
+import {Send} from 'iconoir-react';
 
 function DetailMap() {
   useKakaoLoader();
+  // 이런경우 프롭스를 사용하는 것이 좋음 .
   const fixArr = useSelector(state => state.fix.fix);
   return (
     <ScMap>
@@ -81,7 +83,7 @@ const ScH1 = styled.h1`
   margin-bottom: 6px;
 `;
 
-const ScAllowDiv = styled.div`
+const ScAllowDiv = styled(Send)`
   width: 30%;
   height: 100%;
   background-color: #7cb3ff;
