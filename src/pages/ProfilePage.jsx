@@ -60,7 +60,16 @@ const ProfilePage = () => {
         });
       });
     } catch (error) {
-      console.log(error);
+      toast.error('수정에 실패했습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 
