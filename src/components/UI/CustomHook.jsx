@@ -23,7 +23,6 @@ export const useReadFirestore = async () => {
   };
 
   useEffect(() => {
-    console.log('정보가져오기');
     dataReading();
   }, []);
 };
