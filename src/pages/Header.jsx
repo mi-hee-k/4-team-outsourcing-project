@@ -5,12 +5,13 @@ import {useNavigate} from 'react-router-dom';
 import Button from '../components/UI/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../redux/modules/Auth';
-import {getAuth, signOut} from 'firebase/auth';
+import {getAuth} from 'firebase/auth';
+import {toast} from 'react-toastify';
 
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {displayName, uid, photoURL, email, isLogin} = useSelector(state => state.auth);
+  const {displayName, isLogin} = useSelector(state => state.auth);
   const auth = getAuth();
 
   return (
@@ -42,6 +43,7 @@ export default function Header() {
                   dispatch(logout());
                   navigate('/');
                   auth.signOut();
+                  toast.success('로그아웃되었습니다');
                 }}
               >
                 로그아웃

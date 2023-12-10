@@ -51,26 +51,7 @@ const ScBody = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 150px;
-
-  @media (max-width: 1600px) {
-    padding: 0 70px;
-  }
-  @media (max-width: 1420px) {
-    padding: 0 150px;
-  }
-  @media (max-width: 12800px) {
-    padding: 0 70px;
-  }
-  @media (max-width: 1060px) {
-    padding: 0 100px;
-  }
-  @media (max-width: 860px) {
-    padding: 0 50px;
-  }
-  @media (max-width: 770px) {
-    padding: 0 150px;
-  }
+  padding: 0 70px;
 `;
 
 const ScFixbar = styled.div`
@@ -87,12 +68,9 @@ const ScFixbar = styled.div`
 
 const ScListWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20%, auto));
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(25%, auto));
   width: 100%;
-
-  @media (max-width: 1700px) {
-    grid-template-columns: repeat(auto-fill, minmax(25%, auto));
-  }
 
   @media (max-width: 1420px) {
     grid-template-columns: repeat(auto-fill, minmax(30%, auto));
@@ -101,8 +79,13 @@ const ScListWrapper = styled.div`
   @media (max-width: 1060px) {
     grid-template-columns: repeat(auto-fill, minmax(40%, auto));
   }
+
   @media (max-width: 770px) {
     grid-template-columns: repeat(auto-fill, minmax(55%, auto));
+  }
+
+  @media (min-width: 1700px) {
+    grid-template-columns: repeat(auto-fill, minmax(25%, auto));
   }
 `;
 

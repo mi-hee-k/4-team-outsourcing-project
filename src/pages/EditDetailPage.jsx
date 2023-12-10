@@ -9,8 +9,7 @@ import {storage} from '../shared/firebase';
 import {ref} from 'firebase/storage';
 import {getDownloadURL, uploadBytes} from 'firebase/storage';
 import {toast} from 'react-toastify';
-import {useDispatch} from 'react-redux';
-import {CustomOverlayMap, Map, MapMarker} from 'react-kakao-maps-sdk';
+import {Map, MapMarker} from 'react-kakao-maps-sdk';
 
 function EditDetailPage() {
   const [title, setTitle] = useState('');
@@ -35,6 +34,7 @@ function EditDetailPage() {
       setTitle(postData.title);
       setContent(postData.content);
       setDetailPost(postData);
+      setAddrInput(postData.addrInput);
       setPreviewImg(postData.image_url);
       setUploadImg(postData.image_url);
       setLatitude(postData.latitude);
@@ -43,6 +43,8 @@ function EditDetailPage() {
     };
     getFix();
   }, []);
+
+  console.log(detailPost);
 
   const searchAddress = () => {
     // Kakao Maps에서 제공하는 주소 검색 대화상자 열기
@@ -94,14 +96,13 @@ function EditDetailPage() {
         const imageRef = ref(storage, `test/${uploadImg.name}`);
         await uploadBytes(imageRef, uploadImg);
 
-        console.log('이미지다 ', uploadImg);
         const downloadUrl = await getDownloadURL(imageRef);
-        // const imgUlr = {image_url: downloadUrl};
         // 사진 수정 안되어도 값 안날라가게 고치기 필요
         const newPost = {
           title,
           content,
           image_url: downloadUrl,
+          addrInput,
           buildingName,
           latitude,
           longitude,
@@ -118,6 +119,7 @@ function EditDetailPage() {
       title,
       content,
       image_url: uploadImg,
+      addrInput,
       buildingName,
       latitude,
       longitude,
