@@ -34,6 +34,7 @@ function EditDetailPage() {
       setTitle(postData.title);
       setContent(postData.content);
       setDetailPost(postData);
+      setAddrInput(postData.addrInput);
       setPreviewImg(postData.image_url);
       setUploadImg(postData.image_url);
       setLatitude(postData.latitude);
@@ -42,6 +43,8 @@ function EditDetailPage() {
     };
     getFix();
   }, []);
+
+  console.log(detailPost);
 
   const searchAddress = () => {
     // Kakao Maps에서 제공하는 주소 검색 대화상자 열기
@@ -99,6 +102,7 @@ function EditDetailPage() {
           title,
           content,
           image_url: downloadUrl,
+          addrInput,
           buildingName,
           latitude,
           longitude,
@@ -115,6 +119,7 @@ function EditDetailPage() {
       title,
       content,
       image_url: uploadImg,
+      addrInput,
       buildingName,
       latitude,
       longitude,

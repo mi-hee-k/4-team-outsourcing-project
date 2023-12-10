@@ -73,7 +73,7 @@ const ScName = styled.div`
   background-color: white;
   border: 1px solid;
   border-radius: 5px;
-  padding: 5px;
+  /* padding: 5px; */
   color: black;
   display: flex;
   align-items: center;

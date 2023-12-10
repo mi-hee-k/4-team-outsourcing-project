@@ -23,7 +23,7 @@ export const __getFix = createAsyncThunk('getFix', async (payload, thunkAPI) => 
 export const __deleteFix = createAsyncThunk('deleteFix', async (payload, thunkAPI) => {
   try {
     const removepost = await deleteDoc(doc(db, 'fixs', payload));
-    // thunkAPI.dispatch(__getFix);
+    thunkAPI.dispatch(__getFix);
     return thunkAPI.fulfillWithValue(removepost);
   } catch (err) {
     return thunkAPI.rejectWithValue(err);
