@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk';
+import {CustomOverlayMap, Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import useKakaoLoader from './useKaKaoLoader';

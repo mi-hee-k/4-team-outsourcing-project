@@ -167,6 +167,7 @@ const ScWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100vh;
+  background-color: var(--light-blue);
 `;
 
 const ScForm = styled.form`
@@ -178,7 +179,7 @@ const ScForm = styled.form`
   height: 50%;
   padding: 30px;
   border-radius: 10px;
-  background-color: var(--light-blue);
+  background-color: var(--white);
 
   h1 {
     font-size: 2rem;
@@ -192,6 +193,7 @@ const ScForm = styled.form`
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
+    background-color: #eee;
   }
 
   input:nth-child(3) {

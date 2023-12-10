@@ -2,91 +2,111 @@ import React from 'react';
 import styled, {css} from 'styled-components';
 import AddNew from '../components/AddNew';
 import {useNavigate} from 'react-router';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {useReadFirestore} from '../components/UI/CustomHook';
+
 export default function Homepage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const {isLogin, displayName, uid, photoURL, email} = useSelector(state => state.auth);
+  const {isLogin} = useSelector(state => state.auth);
   useReadFirestore();
   const list = useSelector(state => state.fixList);
 
   return (
-    <Body>
-      <Fixbar>
+    <ScBody>
+      <ScFixbar>
         <span>최근 Fix 한 곳</span>
         {isLogin ? <AddNew /> : <></>}
-      </Fixbar>
-      <ListWrapper>
+      </ScFixbar>
+      <ScListWrapper>
         {list.map(item => {
           return (
-            <List key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
-              <PhotoWrapper>
+            <ScList key={item.id} onClick={() => navigate(`/detail/${item.id}`)}>
+              <ScPhotoWrapper>
                 <img src={item.image_url} alt="" />
-              </PhotoWrapper>
-              <UserInfo>
-                <Avatar>
+              </ScPhotoWrapper>
+              <ScUserInfo>
+                <ScAvatar>
                   {' '}
                   <img src={item.photoURL} alt="" />
-                </Avatar>
-                <NicknameAndDate>
+                </ScAvatar>
+                <ScNicknameAndDate>
                   <p>{item.displayName}</p>
 
                   <time>{item.date}</time>
-                </NicknameAndDate>
-              </UserInfo>
-              <Content>
+                </ScNicknameAndDate>
+              </ScUserInfo>
+              <ScContent>
                 <h1>{item.title}</h1>
                 <h3>{item.addrInput}</h3>
                 <h2>{item.content}</h2>
-              </Content>
-            </List>
+              </ScContent>
+            </ScList>
           );
         })}
-      </ListWrapper>
-    </Body>
+      </ScListWrapper>
+    </ScBody>
   );
 }
-const Body = styled.div`
+const ScBody = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 150px;
+
+  @media (max-width: 1600px) {
+    padding: 0 70px;
+  }
+  @media (max-width: 1420px) {
+    padding: 0 150px;
+  }
+  @media (max-width: 12800px) {
+    padding: 0 70px;
+  }
+  @media (max-width: 1060px) {
+    padding: 0 100px;
+  }
+  @media (max-width: 860px) {
+    padding: 0 50px;
+  }
+  @media (max-width: 770px) {
+    padding: 0 150px;
+  }
 `;
 
-const Fixbar = styled.div`
+const ScFixbar = styled.div`
   height: 100px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 150px;
   font-size: 30px;
   & span {
     font-weight: 600;
   }
 `;
 
-const ListWrapper = styled.div`
+const ScListWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(20%, auto));
   width: 100%;
-  gap: 10px;
 
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
+  @media (max-width: 1700px) {
+    grid-template-columns: repeat(auto-fill, minmax(25%, auto));
   }
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 1420px) {
+    grid-template-columns: repeat(auto-fill, minmax(30%, auto));
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 1060px) {
+    grid-template-columns: repeat(auto-fill, minmax(40%, auto));
+  }
+  @media (max-width: 770px) {
+    grid-template-columns: repeat(auto-fill, minmax(55%, auto));
   }
 `;
 
-const PhotoWrapper = styled.div`
+const ScPhotoWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,7 +122,7 @@ const PhotoWrapper = styled.div`
     object-fit: cover;
   }
 `;
-const List = styled.div`
+const ScList = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -121,14 +141,14 @@ const List = styled.div`
   }
 `;
 
-const UserInfo = styled.div`
+const ScUserInfo = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
   margin: 10px auto;
 `;
 
-const NicknameAndDate = styled.div`
+const ScNicknameAndDate = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 3px;
@@ -142,7 +162,7 @@ const NicknameAndDate = styled.div`
   }
 `;
 
-const Content = styled.div`
+const ScContent = styled.div`
   background-color: var(--beige);
   display: flex;
   flex-direction: column;
@@ -170,7 +190,7 @@ const Content = styled.div`
   }
 `;
 
-const Avatar = styled.figure`
+const ScAvatar = styled.figure`
   background-color: white;
   ${props => {
     switch (props.size) {
