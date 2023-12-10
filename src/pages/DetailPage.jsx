@@ -39,7 +39,7 @@ function DetailPage() {
   };
   //
   if (isLoading) {
-    <h1>Loding..</h1>;
+    return <h1>Loding..</h1>;
   }
 
   if (isError) {
@@ -56,6 +56,7 @@ function DetailPage() {
           </ScTitleBox>
           <ScImg src={fix.image_url}></ScImg>
           <ScP>{fix.content}</ScP>
+          {}
           <DetailMap />
           <ScBtnBox>
             {user ? (

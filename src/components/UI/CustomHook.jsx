@@ -14,10 +14,8 @@ export const useReadFirestore = async () => {
     querySnapshot.forEach(doc => {
       const data = doc.data();
 
-      // console.log(data, ' 이게 독 아이디');
       dataArr.push({...data, id: doc.id});
 
-      // console.log(data.createdAt, '이게그거');
       dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
     });
 
@@ -25,7 +23,6 @@ export const useReadFirestore = async () => {
   };
 
   useEffect(() => {
-    // console.log('리랜더링 되니?');
     dataReading();
   }, []);
 };

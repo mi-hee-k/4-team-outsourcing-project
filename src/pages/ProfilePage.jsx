@@ -60,7 +60,16 @@ const ProfilePage = () => {
         });
       });
     } catch (error) {
-      console.log(error);
+      toast.error('수정에 실패했습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
     }
   };
 
@@ -254,10 +263,6 @@ const ScMyPageWrapper = styled.div`
     width: 80%;
   }
 
-  section:nth-child(2) {
-    margin-bottom: 50px;
-  }
-
   input {
     border: 1px solid #868686;
     border-radius: 10px;
@@ -291,10 +296,11 @@ const ScImgWrapper = styled.figure`
   overflow: hidden;
   width: 200px;
   height: 200px;
+
   cursor: pointer;
 
   img {
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 100%;
   }

@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {CustomOverlayMap, Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk';
+import {Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import useKakaoLoader from './useKaKaoLoader';
@@ -40,7 +40,6 @@ const MapComponent = ({coordinates}) => {
         >
           {positions.map((pos, index) => (
             <MapMarker
-              key={`${pos.lat}-${pos.lng}`}
               position={{
                 lat: pos.lat,
                 lng: pos.lng,
@@ -71,12 +70,14 @@ const MapComponent = ({coordinates}) => {
                 <ScInfoWindow>
                   <Link to={`/detail/${pos.id}`}>
                     <div>
-                      <p>{pos.title}</p>
-                      <section>
+                      <ScTitleSection>
+                        <p>{pos.title}</p>
+                      </ScTitleSection>
+                      <ScContentSection>
                         <ScImgWrapper>
                           <img src={pos.image} alt="" />
                         </ScImgWrapper>
-                      </section>
+                      </ScContentSection>
                     </div>
                   </Link>
                   <span
@@ -112,16 +113,8 @@ const ScInfoWindow = styled.div`
   border: 1px solid #858585;
   padding: 0 10px;
 
-  p {
-    width: 80%;
-    margin-bottom: 12px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   div {
-    height: 130%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -136,17 +129,33 @@ const ScInfoWindow = styled.div`
 
   span {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 4px;
+    right: 4px;
     color: #d10202;
     font-size: 1.1rem;
     cursor: pointer;
   }
 `;
 
+const ScTitleSection = styled.section`
+  p {
+    margin-bottom: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const ScContentSection = styled.section`
+  margin-bottom: 0;
+`;
+
 const ScImgWrapper = styled.figure`
+  height: 100px;
   img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
