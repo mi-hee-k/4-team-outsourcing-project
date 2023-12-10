@@ -291,10 +291,11 @@ const ScImgWrapper = styled.figure`
   overflow: hidden;
   width: 200px;
   height: 200px;
+
   cursor: pointer;
 
   img {
-    object-fit: contain;
+    object-fit: cover;
     width: 100%;
     height: 100%;
   }
