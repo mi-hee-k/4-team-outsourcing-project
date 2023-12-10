@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Header from './Header';
 import styled from 'styled-components';
 import Button from '../components/UI/Button';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,11 +6,9 @@ import {getAuth, updateProfile} from '@firebase/auth';
 import {updateNickname, updatePhoto} from '../redux/modules/Auth';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {db, storage} from '../shared/firebase';
-// import ListInMypage from '../components/UI/ListInMypage';
 import MapComponent from '../components/MapComponent';
-import {collection, getDocs} from '@firebase/firestore';
+import {collection, getDocs, setDoc, doc} from '@firebase/firestore';
 import {setList} from '../redux/modules/fixList';
-import EditBtn from '../components/UI/CustomHook';
 import {toast} from 'react-toastify';
 
 const ProfilePage = () => {
@@ -26,29 +23,48 @@ const ProfilePage = () => {
   const [previewImage, setPreviewImage] = useState(photoURL);
   const imgRef = useRef();
 
-  // 여기서부터
-
   const list = useSelector(state => state.fixList);
 
   useEffect(() => {
-    const dataReading = async () => {
-      const querySnapshot = await getDocs(collection(db, 'fixs'));
-      let dataArr = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        dataArr.push({...data, id: doc.id});
-        dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
-      });
-
-      dispatch(setList(dataArr));
-    };
-
     dataReading();
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    updatePhotoAndNickname();
+  }, [displayName, photoURL]);
+
+  // 데이터 읽어오기 (파이어베이스)
+  const dataReading = async () => {
+    const querySnapshot = await getDocs(collection(db, 'fixs'));
+    let dataArr = [];
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      dataArr.push({...data, id: doc.id});
+      dataArr = dataArr.sort((a, b) => b.createdAt - a.createdAt);
+    });
+    dispatch(setList(dataArr));
+  };
+
   const filteredList = list.filter(item => {
     return item.uid == auth.currentUser.uid;
   });
 
+  // 프로필 변경 후 바로 적용
+  const updatePhotoAndNickname = () => {
+    try {
+      filteredList.map(async item => {
+        await setDoc(doc(db, 'fixs', `${item.id}`), {
+          ...item,
+          displayName,
+          photoURL,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // map에 정보 전달
   const coordinates = filteredList.map(item => {
     return {
       id: item.id,
@@ -59,8 +75,6 @@ const ProfilePage = () => {
       image: item.image_url,
     };
   });
-
-  // 여기까지
 
   // 이미지 저장
   const saveImgFile = e => {
@@ -81,6 +95,8 @@ const ProfilePage = () => {
   // 이미지 수정취소
   const cancelUpdatePhoto = () => {
     setPhotoEditShown(false);
+    setImgFile('');
+    setPreviewImage(photoURL);
   };
 
   // 이미지 수정(업로드)
@@ -92,6 +108,7 @@ const ProfilePage = () => {
       await updateProfile(auth.currentUser, {photoURL: downloadURL});
       dispatch(updatePhoto(downloadURL));
       setPhotoEditShown(false);
+      toast.success('수정되었습니다');
     } catch (error) {
       toast.error('수정에 실패했습니다', {
         position: 'top-center',
@@ -114,6 +131,7 @@ const ProfilePage = () => {
   // 프로필 수정 취소
   const cancelUpdateNickname = () => {
     setNickNameEditShown(false);
+    setNickname(displayName);
   };
 
   // 프로필 수정
@@ -134,7 +152,20 @@ const ProfilePage = () => {
       setNickname('');
       // redux에 업데이트
       dispatch(updateNickname(nickname));
-    } catch (error) {}
+
+      // toast.success('수정되었습니다');
+    } catch (error) {
+      toast.error('수정에 실패했습니다', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
   };
 
   return (
@@ -187,7 +218,6 @@ const ProfilePage = () => {
             )}
           </div>
         </ScProfileWrapper>
-        <EditBtn />
       </section>
       <hr />
       <section>
