@@ -9,8 +9,7 @@ import {storage} from '../shared/firebase';
 import {ref} from 'firebase/storage';
 import {getDownloadURL, uploadBytes} from 'firebase/storage';
 import {toast} from 'react-toastify';
-import {useDispatch} from 'react-redux';
-import {CustomOverlayMap, Map, MapMarker} from 'react-kakao-maps-sdk';
+import {Map, MapMarker} from 'react-kakao-maps-sdk';
 
 function EditDetailPage() {
   const [title, setTitle] = useState('');
@@ -94,9 +93,7 @@ function EditDetailPage() {
         const imageRef = ref(storage, `test/${uploadImg.name}`);
         await uploadBytes(imageRef, uploadImg);
 
-        console.log('이미지다 ', uploadImg);
         const downloadUrl = await getDownloadURL(imageRef);
-        // const imgUlr = {image_url: downloadUrl};
         // 사진 수정 안되어도 값 안날라가게 고치기 필요
         const newPost = {
           title,
