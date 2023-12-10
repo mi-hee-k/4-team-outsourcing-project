@@ -9,6 +9,7 @@ import {useDispatch} from 'react-redux';
 import {__deleteFix, __getFix} from '../redux/modules/DetailSlice';
 import {useSelector} from 'react-redux';
 import DetailMap from '../components/DetailMap';
+import FadeLoader from 'react-spinners/FadeLoader';
 
 function DetailPage() {
   // const [user, setUser] = useState;
@@ -39,7 +40,7 @@ function DetailPage() {
   };
   //
   if (isLoading) {
-    return <h1>Loding..</h1>;
+    return <ScLoding color="#3693d6" />;
   }
 
   if (isError) {
@@ -135,5 +136,7 @@ const ScBtnBox = styled.div`
   margin: 30px 50px 0px 0px;
   gap: 10px;
 `;
+
+const ScLoding = styled(FadeLoader)``;
 
 export default DetailPage;
