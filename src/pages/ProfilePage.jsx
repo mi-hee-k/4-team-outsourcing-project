@@ -254,10 +254,6 @@ const ScMyPageWrapper = styled.div`
     width: 80%;
   }
 
-  section:nth-child(2) {
-    margin-bottom: 50px;
-  }
-
   input {
     border: 1px solid #868686;
     border-radius: 10px;
