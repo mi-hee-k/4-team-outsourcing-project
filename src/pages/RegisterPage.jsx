@@ -99,7 +99,7 @@ const Register = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, inputs.email, inputs.password);
       await updateProfile(userCredential.user, {displayName: inputs.nickname, photoURL: defaultPhotoUrl});
-      console.log(userCredential);
+
       toast.success('회원가입 성공!', {
         position: 'top-center',
         autoClose: 3000,

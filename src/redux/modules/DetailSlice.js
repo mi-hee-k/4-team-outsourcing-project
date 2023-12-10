@@ -14,10 +14,8 @@ export const __getFix = createAsyncThunk('getFix', async (payload, thunkAPI) => 
   try {
     const postRef = doc(db, 'fixs', payload);
     const post = await getDoc(postRef);
-    console.log('받아온 포스트다', post.data());
     return thunkAPI.fulfillWithValue(post.data());
   } catch (err) {
-    console.log('데이터 가져오기 오류다', err);
     return thunkAPI.rejectWithValue(err);
   }
 });
@@ -25,8 +23,8 @@ export const __getFix = createAsyncThunk('getFix', async (payload, thunkAPI) => 
 export const __deleteFix = createAsyncThunk('deleteFix', async (payload, thunkAPI) => {
   try {
     const removepost = await deleteDoc(doc(db, 'fixs', payload));
-    thunkAPI.dispatch(__getFix);
-    return thunkAPI.fulfillWithValue(removepost.data());
+    // thunkAPI.dispatch(__getFix);
+    return thunkAPI.fulfillWithValue(removepost);
   } catch (err) {
     return thunkAPI.rejectWithValue(err);
   }
