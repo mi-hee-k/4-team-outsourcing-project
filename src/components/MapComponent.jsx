@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Map, MapMarker, MarkerClusterer} from 'react-kakao-maps-sdk';
+import {Map, MapMarker, MarkerClusterer, ZoomControl} from 'react-kakao-maps-sdk';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import useKakaoLoader from './useKaKaoLoader';
@@ -9,6 +9,7 @@ const MapComponent = ({coordinates}) => {
   // State 정의
 
   const [positions, setPositions] = useState([]);
+  const [level, setLevel] = useState();
 
   useEffect(() => {
     setPositions(coordinates);
@@ -30,6 +31,7 @@ const MapComponent = ({coordinates}) => {
           border: `1px solid #E0F4FF`,
         }}
         level={13}
+        onZoomChanged={map => setLevel(map.getLevel())}
       >
         <MarkerClusterer
           averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
@@ -92,6 +94,7 @@ const MapComponent = ({coordinates}) => {
             </MapMarker>
           ))}
         </MarkerClusterer>
+        <ZoomControl />
       </Map>
     </>
   );
