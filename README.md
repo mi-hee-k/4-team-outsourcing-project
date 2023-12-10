@@ -13,7 +13,7 @@
 
 # 🔗 배포링크
 
-보러가기
+[보러가기](https://team-outsourcing-project.vercel.app/)
 
 # ⌚ 개발기간
 
