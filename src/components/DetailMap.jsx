@@ -1,9 +1,10 @@
 import React from 'react';
-import {CustomOverlayMap, Map, MapMarker, useKakaoLoader} from 'react-kakao-maps-sdk';
+import {CustomOverlayMap, Map, MapMarker} from 'react-kakao-maps-sdk';
 import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import {Send} from 'iconoir-react';
+import useKakaoLoader from './useKaKaoLoader';
 
 function DetailMap() {
   useKakaoLoader();
