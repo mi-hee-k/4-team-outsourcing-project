@@ -207,6 +207,7 @@ function WriteNewFix() {
                 placeholder=" 📍 장소 검색"
                 value={addrInput}
                 onChange={event => setAddrInput(event.target.value)}
+                autoComplete="false"
               />
               <button type="button">장소 검색</button>
             </div>
