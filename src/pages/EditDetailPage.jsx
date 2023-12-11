@@ -134,7 +134,7 @@ function EditDetailPage() {
       <ScContainer>
         <ScMain onSubmit={postUpdateHandler}>
           <ScTitleBox>
-            <ScTitleInput autoFocus value={title} onChange={titleOnchangeHandler} />
+            <ScTitleInput maxLength={30} autoFocus value={title} onChange={titleOnchangeHandler} />
           </ScTitleBox>
           <ScLabel htmlFor="postImg" type="button">
             <ScImgInput type="file" accept="image/*" id="postImg" onChange={imgOnclickHandler} />
@@ -226,15 +226,16 @@ const ScTitleBox = styled.div`
 const ScContentTextarea = styled.textarea`
   display: flex;
   justify-content: center;
-  width: 760px;
+  width: 100%;
   height: 300px;
-  margin: 50px 40px 0 40px;
+  padding: 30px;
   font-size: 15px;
   line-height: 35px;
   resize: none;
   background: none;
   border-width: 0 0 0px;
   outline: none;
+  white-space: break-spaces;
 `;
 const ScBtnBox = styled.div`
   width: 93%;
