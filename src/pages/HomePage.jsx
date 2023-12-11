@@ -160,6 +160,9 @@ const ScContent = styled.div`
     font-size: 20px;
     border-bottom: 1px solid gray;
     padding-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   & h2 {
     font-size: 15px;

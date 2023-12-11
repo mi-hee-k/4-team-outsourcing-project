@@ -107,6 +107,7 @@ const ScH1 = styled.h1`
   margin-left: 30px;
   font-size: 2rem;
   background: none;
+  white-space: break-spaces;
   @media only screen and (min-width: 1500px) {
     font-size: 300%;
   }
@@ -124,8 +125,12 @@ const ScTitleBox = styled.div`
 const ScP = styled.p`
   display: flex;
   align-items: center;
-  margin: 50px 40px 0px 40px;
+  /* margin: 50px 40px 0px 40px; */
+  padding: 30px;
   font-size: 18px;
+  white-space: break-spaces;
+  /* overflow: hidden;
+    text-overflow: ellipsis; */
   @media only screen and (min-width: 1500px) {
     font-size: 150%;
   }
