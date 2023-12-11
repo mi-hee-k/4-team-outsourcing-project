@@ -49,7 +49,7 @@ const Login = () => {
         theme: 'colored',
       });
       clearInputs();
-      return;
+      throw new Error('이메일과 비밀번호를 모두 입력해주세요');
     }
     // 이메일형식이 아닐 때
     if (!inputs.email.includes('@')) {
@@ -64,16 +64,16 @@ const Login = () => {
         theme: 'colored',
       });
       clearInputs();
-      return;
+      throw new Error('올바른 이메일 형식을 입력해주세요');
     }
-    return true;
   };
 
   // email 로그인
   const loginEmail = async e => {
     e.preventDefault();
-    checkInputs();
+
     try {
+      checkInputs();
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
       toast.success('로그인 성공!', {
         position: 'top-center',
@@ -89,16 +89,22 @@ const Login = () => {
       dispatch(login(userCredential.user));
       navigate('/');
     } catch (error) {
-      toast.error('로그인 정보를 다시 확인해주세요', {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme: 'colored',
-      });
+      if (
+        error.message !== '이메일과 비밀번호를 모두 입력해주세요' &&
+        error.message !== '올바른 이메일 형식을 입력해주세요'
+      ) {
+        // checkInputs에서 throw된 에러가 다른 경우에만 아래 코드 실행
+        toast.error('로그인 정보를 다시 확인해주세요', {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: 'colored',
+        });
+      }
     }
   };
 
