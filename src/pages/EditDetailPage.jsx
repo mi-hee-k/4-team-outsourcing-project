@@ -23,8 +23,6 @@ function EditDetailPage() {
   const [buildingName, setBuildingName] = useState(''); //빌딩네임
   const {id} = useParams();
   const navigate = useNavigate();
-  //  데이터 가져오는 속도가 느림으로 인한 오류해결 필요
-  //  수정하지 않으면 넘어갈 수 없게 벨리데이션 체크 필요
 
   useEffect(() => {
     const getFix = async () => {

@@ -163,7 +163,9 @@ const ScContent = styled.div`
   }
   & h2 {
     font-size: 15px;
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding-bottom: 5px;
     height: 40%;
   }
