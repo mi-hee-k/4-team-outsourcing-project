@@ -66,6 +66,7 @@ const Login = () => {
       clearInputs();
       return;
     }
+    return true;
   };
 
   // email 로그인
@@ -74,7 +75,6 @@ const Login = () => {
     checkInputs();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, inputs.email, inputs.password);
-
       toast.success('로그인 성공!', {
         position: 'top-center',
         autoClose: 3000,
